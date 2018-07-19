@@ -1,4 +1,4 @@
-package com.kotlin.olena.tvshowsapp.ui
+package com.kotlin.olena.tvshowsapp.ui.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -19,7 +19,7 @@ class ShowsAdapter(var listOfShows: MutableList<ShowModel?>) : RecyclerView.Adap
         if(viewType == VIEW_SHOW) {
             return ShowsHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_show, parent, false))
         } else{
-            return ProgressHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_progress,parent,false))
+            return ProgressHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_progress, parent, false))
         }
     }
 
