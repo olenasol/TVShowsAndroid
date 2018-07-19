@@ -2,15 +2,17 @@ package com.kotlin.olena.tvshowsapp.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.kotlin.olena.tvshowsapp.R
-import com.kotlin.olena.tvshowsapp.fragments.shows_list.ShowsListFragment
+import com.kotlin.olena.tvshowsapp.fragments.show.list.ShowsListFragment
+import com.kotlin.olena.tvshowsapp.ui.layout.MainActivityUI
+import org.jetbrains.anko.setContentView
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        supportFragmentManager.beginTransaction().add(R.id.mainLayout,
-                ShowsListFragment.newInstance()).commit()
+        MainActivityUI().setContentView(this)
+        if (savedInstanceState == null)
+            supportFragmentManager.beginTransaction().add(MainActivityUI.mainLayoutId,
+                    ShowsListFragment.newInstance()).commit()
     }
 }
