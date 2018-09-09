@@ -1,11 +1,20 @@
 package com.kotlin.olena.tvshowsapp.fragments.show.list
 
-import android.arch.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
 import com.kotlin.olena.tvshowsapp.models.ShowModel
 
-class ShowsViewModel:ViewModel(){
+class ShowsViewModel : ViewModel() {
 
-    val listShowsObservable:LiveData<MutableList<ShowModel?>> = ShowsRepository().getShowsFromServer(0)
+    var page: Int = 0
+    var listShowsObservable: MutableLiveData<MutableList<ShowModel?>> = MutableLiveData()
 
+    init {
+        addToShows()
+    }
+
+    fun addToShows() {
+        page++
+        ShowsRepository().getShowsFromServer(page - 1,listShowsObservable)
+    }
 }

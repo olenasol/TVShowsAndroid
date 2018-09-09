@@ -3,7 +3,7 @@ package com.kotlin.olena.tvshowsapp.rest
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ApiClient() {
+class ApiClient {
 
     companion object {
         private val BASE_URL = "http://api.tvmaze.com"

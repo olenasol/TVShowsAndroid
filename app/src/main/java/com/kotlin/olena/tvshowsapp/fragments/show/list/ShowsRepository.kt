@@ -1,23 +1,28 @@
 package com.kotlin.olena.tvshowsapp.fragments.show.list
 
-import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import com.kotlin.olena.tvshowsapp.models.ShowModel
 import com.kotlin.olena.tvshowsapp.rest.ApiClient
 import com.kotlin.olena.tvshowsapp.rest.ApiInterface
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.arch.lifecycle.MutableLiveData
 
-class ShowsRepository{
+class ShowsRepository {
 
-    fun getShowsFromServer(page:Int):LiveData<MutableList<ShowModel?>>{
-        val data = MutableLiveData<MutableList<ShowModel?>>()
+    fun getShowsFromServer(page: Int,data: MutableLiveData<MutableList<ShowModel?>>) {
+        var list = mutableListOf<ShowModel?>()
+        if (data.value != null){
+            list = data.value!!
+            list.removeAt(list.size-1)
+        }
         val apiService = ApiClient.getClient().create(ApiInterface::class.java)
         val call: Call<MutableList<ShowModel?>> = apiService.getShowsByPage(page)
         call.enqueue(object : Callback<MutableList<ShowModel?>> {
             override fun onResponse(call: Call<MutableList<ShowModel?>>?, response: Response<MutableList<ShowModel?>>?) {
-                data.value = response?.body()
+                list.addAll(response?.body()!!.asIterable())
+                list.add(null)
+                data.postValue(list)
             }
 
             override fun onFailure(call: Call<MutableList<ShowModel?>>?, t: Throwable?) {
@@ -25,6 +30,5 @@ class ShowsRepository{
                 //TODO handle error
             }
         })
-        return data
     }
 }

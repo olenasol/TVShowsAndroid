@@ -15,4 +15,12 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction().add(MainActivityUI.mainLayoutId,
                     ShowsListFragment.newInstance()).commit()
     }
+    override fun onBackPressed() {
+        val count:Int = supportFragmentManager.backStackEntryCount
+        if(count==0){
+            super.onBackPressed()
+        } else{
+            supportFragmentManager.popBackStack()
+        }
+    }
 }

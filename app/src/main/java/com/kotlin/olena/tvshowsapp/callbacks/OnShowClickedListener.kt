@@ -1,5 +1,8 @@
 package com.kotlin.olena.tvshowsapp.callbacks
 
-interface OnShowClickedListener{
-    fun onShowClicked(showId:Int)
+import android.widget.ImageView
+import com.kotlin.olena.tvshowsapp.models.ShowModel
+
+interface OnShowClickedListener {
+    fun onShowClicked(position:Int, show: ShowModel, view: ImageView)
 }
