@@ -8,6 +8,8 @@
     <ImageView
         android:id="@+id/posterImgView"
         android:contentDescription="@string/show_poster"
+        android:foreground="#CC000000"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

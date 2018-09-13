@@ -33,10 +33,11 @@ class ShowsAdapter(val listener:OnShowClickedListener) : RecyclerView.Adapter<Re
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ShowsHolder) {
-            Picasso.get().load(listOfShows[position]?.image?.original).into(holder.showImageView)
+            Picasso.get().load(listOfShows[position]?.image?.original).fit()
+                    .centerCrop().into(holder.showImageView)
             ViewCompat.setTransitionName(holder.showImageView, ShowModel.transitionName(listOfShows[position]!!.id))
             holder.itemLayout.onClick {
-                listener.onShowClicked(listOfShows[position]!!,
+                listener.onShowClicked(position,listOfShows[position]!!,
                     holder.showImageView) }
         }
     }

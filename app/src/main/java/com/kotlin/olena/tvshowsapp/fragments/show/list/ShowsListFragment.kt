@@ -4,12 +4,10 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.SharedElementCallback
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +38,13 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initShowsViewModel()
         initShowsResView()
+    }
+
+    private fun initShowsViewModel() {
+        showsViewModel = ViewModelProviders.of(this).get(ShowsViewModel::class.java)
+        observeViewModel(showsViewModel)
     }
 
     private fun initShowsResView() {
@@ -57,6 +61,11 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
         }
         showsRecyclerView.layoutManager = gridLayoutManager
         showsRecyclerView.adapter = ShowsAdapter(this)
+        if (showsViewModel!!.verifyIfScrollNeeded(
+                        (showsRecyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition(),
+                        (showsRecyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition())) {
+            showsRecyclerView.layoutManager.scrollToPosition(showsViewModel!!.position)
+        }
         showsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -68,24 +77,19 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
                 }
             }
         })
-        showsViewModel = ViewModelProviders.of(this).get(ShowsViewModel::class.java)
-        observeViewModel(showsViewModel)
 
     }
 
-    override fun onShowClicked(position:Int, show: ShowModel,view: ImageView) {
+    override fun onShowClicked(position: Int, show: ShowModel, view: ImageView) {
         val transitionName: String = ViewCompat.getTransitionName(view)
-        val fragment: ShowDetailFragment = ShowDetailFragment.newInstance(show.id,show.image.original, transitionName)
-        fragment.sharedElementEnterTransition = TransitionInflater.from(context)
-                .inflateTransition(android.R.transition.move)
-        fragment.sharedElementReturnTransition = (TransitionInflater.from(context))
-                .inflateTransition(android.R.transition.move)
-        val showDetailVM: ShowDetailViewModel  = ViewModelProviders.of(activity!!).get(ShowDetailViewModel::class.java)
-        showDetailVM.selectShow(show.id,show.image.original)
-        fragmentManager ?. beginTransaction ()
-                ?.addSharedElement(view,transitionName)
+        val fragment: ShowDetailFragment = ShowDetailFragment.newInstance(show.id, show.image.original, transitionName)
+        val showDetailVM: ShowDetailViewModel = ViewModelProviders.of(activity!!).get(ShowDetailViewModel::class.java)
+        showDetailVM.selectShow(show.id, show.image.original)
+        showsViewModel?.position = position
+        fragmentManager?.beginTransaction()
+                ?.addSharedElement(view, transitionName)
                 ?.replace(MainActivityUI.mainLayoutId,
-                fragment)
+                        fragment)
                 ?.addToBackStack(null)
                 ?.commit()
     }
