@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "988429612794",
+    "firebase_url": "https://tvshowsapp-5dabf.firebaseio.com",
+    "project_id": "tvshowsapp-5dabf",
+    "storage_bucket": "tvshowsapp-5dabf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:988429612794:android:8dcd1c801c90807b",
+        "android_client_info": {
+          "package_name": "com.kotlin.olena.tvshowsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "988429612794-i0itghvjhj17q2ke6egsrv9v3508q2f6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kotlin.olena.tvshowsapp",
+            "certificate_hash": "eb4bbca94463acff79e163973ab280a6d05e4383"
+          }
+        },
+        {
+          "client_id": "988429612794-c173dn1lbqjmldgdoe1db77akovkneln.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGjS-NnfG175anqxdKKb2qFloulONoIOI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "988429612794-c173dn1lbqjmldgdoe1db77akovkneln.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

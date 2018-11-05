@@ -2,4 +2,13 @@
     <string name="app_name">TV Shows App</string>
     <string name="search">Search</string>
     <string name="show_poster">Show poster</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="register"><u>Register</u></string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="auth_failed">Authentication failed.</string>
+    <string name="register_failed">Registration failed</string>
 </resources>

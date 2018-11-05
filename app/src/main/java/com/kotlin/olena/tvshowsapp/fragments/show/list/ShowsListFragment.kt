@@ -18,7 +18,6 @@ import com.kotlin.olena.tvshowsapp.fragments.show.detail.ShowDetailFragment
 import com.kotlin.olena.tvshowsapp.fragments.show.detail.ShowDetailViewModel
 import com.kotlin.olena.tvshowsapp.models.ShowModel
 import com.kotlin.olena.tvshowsapp.ui.adapter.ShowsAdapter
-import com.kotlin.olena.tvshowsapp.ui.layout.MainActivityUI
 import kotlinx.android.synthetic.main.fragment_shows_list.*
 
 class ShowsListFragment : Fragment(), OnShowClickedListener {
@@ -88,7 +87,7 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
         showsViewModel?.position = position
         fragmentManager?.beginTransaction()
                 ?.addSharedElement(view, transitionName)
-                ?.replace(MainActivityUI.mainLayoutId,
+                ?.replace(R.id.main_container,
                         fragment)
                 ?.addToBackStack(null)
                 ?.commit()
