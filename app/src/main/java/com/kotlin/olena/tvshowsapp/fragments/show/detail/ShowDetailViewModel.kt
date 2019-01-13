@@ -9,7 +9,7 @@ class ShowDetailViewModel : ViewModel() {
     var show: MutableLiveData<ShowModel> = MutableLiveData()
 
     fun selectShow(id:Int,url: String){
-        show.postValue(ShowModel(id, ImageModel(url)))
+        show.postValue(ShowModel(id, ImageModel(url),false))
     }
     fun getShowImage():String?{
         return show.value?.image?.original

@@ -43,7 +43,7 @@ class RegistrationFragment : Fragment() {
                             Toast.LENGTH_SHORT).show()
                 }
         })
-        registerBtn.onClick {
+        registerBtn.setOnClickListener {
             loginVM?.registerUser(emailRegistrationEdt.text.toString(),passwordRegistrationEdt.text.toString(),
                     confirmPasswordEdt.text.toString(),activity!!)
         }

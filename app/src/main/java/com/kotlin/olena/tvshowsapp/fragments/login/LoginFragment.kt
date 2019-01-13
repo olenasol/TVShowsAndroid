@@ -46,10 +46,10 @@ class LoginFragment : Fragment() {
                         Toast.LENGTH_SHORT).show()
             }
         })
-        loginBtn.onClick {
+        loginBtn.setOnClickListener {
             loginVM?.loginEmail(emailEdt.text.toString(), passwordEdt.text.toString(),activity!!)
         }
-        registerTxt.onClick {
+        registerTxt.setOnClickListener {
             fragmentManager?.beginTransaction()?.replace(R.id.start_container,RegistrationFragment.newInstance())?.commit()
         }
     }

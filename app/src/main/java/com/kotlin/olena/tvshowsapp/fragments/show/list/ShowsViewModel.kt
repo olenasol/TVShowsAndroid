@@ -25,4 +25,14 @@ class ShowsViewModel : ViewModel() {
         else
             position in firstPos..lastPos
     }
+    fun setShowToFavourite(pos:Int){
+        val show: ShowModel? = ShowModel(listShowsObservable.value?.get(pos)?.id!!,
+                listShowsObservable.value?.get(pos)?.image!!,
+                listShowsObservable.value?.get(pos)?.isFavourite!!)
+        show?.isFavourite = !show?.isFavourite!!
+        val list: MutableList<ShowModel?> = mutableListOf()
+        list.addAll(listShowsObservable.value!!)
+        list[pos] = show
+        listShowsObservable.postValue(list)
+    }
 }

@@ -17,7 +17,7 @@ import com.kotlin.olena.tvshowsapp.callbacks.OnShowClickedListener
 import com.kotlin.olena.tvshowsapp.fragments.show.detail.ShowDetailFragment
 import com.kotlin.olena.tvshowsapp.fragments.show.detail.ShowDetailViewModel
 import com.kotlin.olena.tvshowsapp.models.ShowModel
-import com.kotlin.olena.tvshowsapp.ui.adapter.ShowsAdapter
+import com.kotlin.olena.tvshowsapp.fragments.show.list.rv.ShowsAdapter
 import kotlinx.android.synthetic.main.fragment_shows_list.*
 
 class ShowsListFragment : Fragment(), OnShowClickedListener {
@@ -63,10 +63,10 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
         if (showsViewModel!!.verifyIfScrollNeeded(
                         (showsRecyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition(),
                         (showsRecyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition())) {
-            showsRecyclerView.layoutManager.scrollToPosition(showsViewModel!!.position)
+            (showsRecyclerView.layoutManager as GridLayoutManager).scrollToPosition(showsViewModel!!.position)
         }
         showsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val linearLayoutManager: LinearLayoutManager = LinearLayoutManager::class.java.cast(recyclerView?.layoutManager)
                 val totalItem: Int = linearLayoutManager.itemCount
@@ -80,7 +80,7 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
     }
 
     override fun onShowClicked(position: Int, show: ShowModel, view: ImageView) {
-        val transitionName: String = ViewCompat.getTransitionName(view)
+        val transitionName: String = ViewCompat.getTransitionName(view)!!
         val fragment: ShowDetailFragment = ShowDetailFragment.newInstance(show.id, show.image.original, transitionName)
         val showDetailVM: ShowDetailViewModel = ViewModelProviders.of(activity!!).get(ShowDetailViewModel::class.java)
         showDetailVM.selectShow(show.id, show.image.original)
@@ -92,10 +92,16 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
                 ?.addToBackStack(null)
                 ?.commit()
     }
+    override fun onFavouriteClicked(position: Int) {
+        showsViewModel?.setShowToFavourite(position)
+    }
+
 
     private fun observeViewModel(showsViewModel: ShowsViewModel?) {
         showsViewModel?.listShowsObservable?.observe(this, Observer<MutableList<ShowModel?>> { shows ->
-            (showsRecyclerView.adapter as ShowsAdapter).setShowsList(shows!!)
+            if (shows != null) {
+                (showsRecyclerView.adapter as ShowsAdapter).setShowsList(shows)
+            }
         })
     }
 

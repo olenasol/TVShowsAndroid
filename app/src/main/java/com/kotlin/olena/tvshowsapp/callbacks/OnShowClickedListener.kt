@@ -5,4 +5,6 @@ import com.kotlin.olena.tvshowsapp.models.ShowModel
 
 interface OnShowClickedListener {
     fun onShowClicked(position:Int, show: ShowModel, view: ImageView)
+
+    fun onFavouriteClicked(position: Int)
 }
