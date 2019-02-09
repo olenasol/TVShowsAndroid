@@ -16,7 +16,9 @@ import kotlinx.android.synthetic.main.fragment_registration.*
 
 class RegistrationFragment : BaseFragment<LoginViewModel>() {
 
-    private var loginVM: LoginViewModel? = null
+    override fun provideViewModel(): LoginViewModel {
+        return ViewModelProviders.of(activity!!).get(LoginViewModel::class.java)
+    }
 
     companion object {
         fun newInstance(): RegistrationFragment {
@@ -31,18 +33,16 @@ class RegistrationFragment : BaseFragment<LoginViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginVM = ViewModelProviders.of(activity!!).get(LoginViewModel::class.java)
-        loginVM?.getIsRegistered()?.observe(this, Observer<Boolean> { isRegistered ->
+        viewModel.getIsRegistered().observe(this, Observer<Boolean> { isRegistered ->
             if (isRegistered!!) {
-                fragmentManager?.beginTransaction()?.replace(R.id.main_container,
-                        LoginFragment.newInstance())?.commit()
+                replaceFragment(LoginFragment.newInstance())
             } else {
                 Toast.makeText(activity, R.string.register_failed,
                         Toast.LENGTH_SHORT).show()
             }
         })
         registerBtn.setOnClickListener {
-            loginVM?.registerUser(emailRegistrationEdt.text.toString(), passwordRegistrationEdt.text.toString(),
+            viewModel.registerUser(emailRegistrationEdt.text.toString(), passwordRegistrationEdt.text.toString(),
                     confirmPasswordEdt.text.toString(), activity!!)
         }
     }

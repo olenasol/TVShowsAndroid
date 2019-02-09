@@ -45,8 +45,9 @@ dependencies {
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.3.0"
     implementation "com.squareup.retrofit2:converter-gson:2.3.0"
-    //Picasso - for loading images
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    //Glide - for loading images
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    kapt 'com.github.bumptech.glide:compiler:4.8.0'
     //Firebase - sign in
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     //Testing
@@ -56,3 +57,4 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-kapt'

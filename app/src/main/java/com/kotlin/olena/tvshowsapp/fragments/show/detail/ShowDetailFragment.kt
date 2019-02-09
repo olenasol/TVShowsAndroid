@@ -10,17 +10,19 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.kotlin.olena.tvshowsapp.GlideApp
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.fragments.base.BaseFragment
 import com.kotlin.olena.tvshowsapp.models.ShowModel
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_show_detail.*
 
 
 class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
 
-    private var showDetailVM: ShowDetailViewModel? = null
+    override fun provideViewModel(): ShowDetailViewModel {
+        return ViewModelProviders.of(activity!!).get(ShowDetailViewModel::class.java)
+    }
+
     var showId: Int = 0
     var transitionName: String = ""
     var posterUrl: String = ""
@@ -54,23 +56,22 @@ class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showDetailVM = ViewModelProviders.of(activity!!).get(ShowDetailViewModel::class.java)
-        ViewCompat.setTransitionName(posterImgView, ShowModel.transitionName(showDetailVM?.show?.value?.id!!))
-        Picasso.get().load(showDetailVM?.getShowImage()).fit()
-                .centerCrop()
-                .into(posterImgView, object : Callback {
-                    override fun onSuccess() {
-                        startPostponedEnterTransition()
-                    }
-
-                    override fun onError(e: Exception?) {
-                        startPostponedEnterTransition()
-                    }
-
-                })
-        showDetailVM?.show?.observe(this, Observer { show ->
+        ViewCompat.setTransitionName(posterImgView, ShowModel.transitionName(viewModel.show.value?.id!!))
+//        GlideApp.with(context!!).load(viewModel.getShowImage()).fitCenter()
+//                .centerCrop()
+//                .into(posterImgView, object : Callback {
+//                    override fun onSuccess() {
+//                        startPostponedEnterTransition()
+//                    }
+//
+//                    override fun onError(e: Exception?) {
+//                        startPostponedEnterTransition()
+//                    }
+//
+//                })
+        viewModel.show.observe(this, Observer { show ->
             if (show != null)
-                Picasso.get().load(show.image.original).into(posterImgView)
+                GlideApp.with(context!!).load(show.image.original).into(posterImgView)
         })
 
     }

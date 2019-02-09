@@ -18,7 +18,9 @@ import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment : BaseFragment<LoginViewModel>(){
 
-    private var loginVM: LoginViewModel? = null
+    override fun provideViewModel(): LoginViewModel {
+        return ViewModelProviders.of(activity!!).get(LoginViewModel::class.java)
+    }
 
     companion object {
         fun newInstance(): LoginFragment {
@@ -33,20 +35,19 @@ class LoginFragment : BaseFragment<LoginViewModel>(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginVM = ViewModelProviders.of(activity!!).get(LoginViewModel::class.java)
-        loginVM?.getIsLoggedIn()?.observe(this, Observer<Boolean> { isLogged ->
+        viewModel.getIsLoggedIn().observe(this, Observer<Boolean> { isLogged ->
             if (isLogged!!) {
-                fragmentManager?.beginTransaction()?.replace(R.id.main_container, ShowsListFragment.newInstance())?.commit()
+                replaceFragment(ShowsListFragment.newInstance())
             } else {
                 Toast.makeText(activity, R.string.auth_failed,
                         Toast.LENGTH_SHORT).show()
             }
         })
         loginBtn.setOnClickListener {
-            loginVM?.loginEmail(emailEdt.text.toString(), passwordEdt.text.toString(), activity!!)
+            viewModel.loginEmail(emailEdt.text.toString(), passwordEdt.text.toString(), activity!!)
         }
         registerTxt.setOnClickListener {
-            fragmentManager?.beginTransaction()?.replace(R.id.main_container, RegistrationFragment.newInstance())?.addToBackStack(RegistrationFragment::class.java.simpleName)?.commit()
+            replaceFragment(RegistrationFragment.newInstance(),true)
         }
     }
 
