@@ -1,27 +1,25 @@
 package com.kotlin.olena.tvshowsapp.fragments.registration
 
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.kotlin.olena.tvshowsapp.R
-import com.kotlin.olena.tvshowsapp.fragments.LoginViewModel
+import com.kotlin.olena.tvshowsapp.fragments.base.BaseFragment
+import com.kotlin.olena.tvshowsapp.fragments.shared.LoginViewModel
 import com.kotlin.olena.tvshowsapp.fragments.login.LoginFragment
 import kotlinx.android.synthetic.main.fragment_registration.*
-import org.jetbrains.anko.sdk21.coroutines.onClick
 
-class RegistrationFragment : Fragment() {
+class RegistrationFragment : BaseFragment<LoginViewModel>() {
 
-    var loginVM: LoginViewModel? = null
+    private var loginVM: LoginViewModel? = null
 
     companion object {
-        fun newInstance():RegistrationFragment{
+        fun newInstance(): RegistrationFragment {
             return RegistrationFragment()
         }
     }
@@ -35,17 +33,17 @@ class RegistrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         loginVM = ViewModelProviders.of(activity!!).get(LoginViewModel::class.java)
         loginVM?.getIsRegistered()?.observe(this, Observer<Boolean> { isRegistered ->
-                if (isRegistered!!) {
-                    fragmentManager?.beginTransaction()?.replace(R.id.start_container,
-                            LoginFragment.newInstance())?.commit()
-                } else{
-                    Toast.makeText(activity, R.string.register_failed,
-                            Toast.LENGTH_SHORT).show()
-                }
+            if (isRegistered!!) {
+                fragmentManager?.beginTransaction()?.replace(R.id.main_container,
+                        LoginFragment.newInstance())?.commit()
+            } else {
+                Toast.makeText(activity, R.string.register_failed,
+                        Toast.LENGTH_SHORT).show()
+            }
         })
         registerBtn.setOnClickListener {
-            loginVM?.registerUser(emailRegistrationEdt.text.toString(),passwordRegistrationEdt.text.toString(),
-                    confirmPasswordEdt.text.toString(),activity!!)
+            loginVM?.registerUser(emailRegistrationEdt.text.toString(), passwordRegistrationEdt.text.toString(),
+                    confirmPasswordEdt.text.toString(), activity!!)
         }
     }
 }

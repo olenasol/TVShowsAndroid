@@ -1,27 +1,28 @@
 package com.kotlin.olena.tvshowsapp.fragments.show.list.rv
 
 import android.os.Bundle
-import android.support.v4.view.ViewCompat
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.DiffUtil
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.callbacks.OnShowClickedListener
 import com.kotlin.olena.tvshowsapp.fragments.show.list.rv.ShowListDiffCallback.Companion.ARGS_FAVOURITE
 import com.kotlin.olena.tvshowsapp.models.ShowModel
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.item_progress.view.*
 import kotlinx.android.synthetic.main.item_show.view.*
 
-class ShowsAdapter(val listener: OnShowClickedListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ShowsAdapter(private val listener: OnShowClickedListener) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
-    val VIEW_SHOW: Int = 0
-    val VIEW_PROGRESS: Int = 1
+    companion object {
+        const val VIEW_SHOW: Int = 0
+        const val VIEW_PROGRESS: Int = 1
+    }
+
     var listOfShows: MutableList<ShowModel?> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         return if (viewType == VIEW_SHOW) {
             ShowsHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_show, parent, false))
         } else {
@@ -33,7 +34,7 @@ class ShowsAdapter(val listener: OnShowClickedListener) : RecyclerView.Adapter<R
         return listOfShows.size
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         if (holder is ShowsHolder) {
             Picasso.get().load(listOfShows[position]?.image?.original).fit()
                     .centerCrop().into(holder.showImageView)
@@ -53,7 +54,7 @@ class ShowsAdapter(val listener: OnShowClickedListener) : RecyclerView.Adapter<R
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
         if (holder is ShowsHolder)
             if (!payloads.isEmpty()) {
                 val payload: Bundle = payloads[0] as Bundle
@@ -66,11 +67,14 @@ class ShowsAdapter(val listener: OnShowClickedListener) : RecyclerView.Adapter<R
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (listOfShows[position] == null) {
+        return if (position < itemCount) {
+            if (listOfShows[position] == null) {
+                VIEW_PROGRESS
+            } else {
+                VIEW_SHOW
+            }
+        } else
             VIEW_PROGRESS
-        } else {
-            VIEW_SHOW
-        }
     }
 
     fun setShowsList(list: MutableList<ShowModel?>) {
@@ -81,13 +85,11 @@ class ShowsAdapter(val listener: OnShowClickedListener) : RecyclerView.Adapter<R
     }
 
 
-    class ShowsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val showImageView = itemView.showImageView
-        val itemLayout = itemView.itemLayout
-        val favouriteBtn = itemView.favouriteBtn
+    class ShowsHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+        val showImageView = itemView.showImageView!!
+        val itemLayout = itemView.itemLayout!!
+        val favouriteBtn = itemView.favouriteBtn!!
     }
 
-    class ProgressHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val progressBar = itemView.progressLoadMore
-    }
+    class ProgressHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView)
 }

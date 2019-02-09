@@ -1,27 +1,26 @@
 package com.kotlin.olena.tvshowsapp.fragments.show.detail
 
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
 import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.kotlin.olena.tvshowsapp.R
+import com.kotlin.olena.tvshowsapp.fragments.base.BaseFragment
 import com.kotlin.olena.tvshowsapp.models.ShowModel
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_show_detail.*
-import java.lang.Exception
 
 
-class ShowDetailFragment : Fragment() {
+class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
 
-    var showDetailVM: ShowDetailViewModel? = null
+    private var showDetailVM: ShowDetailViewModel? = null
     var showId: Int = 0
     var transitionName: String = ""
     var posterUrl: String = ""
@@ -58,7 +57,6 @@ class ShowDetailFragment : Fragment() {
         showDetailVM = ViewModelProviders.of(activity!!).get(ShowDetailViewModel::class.java)
         ViewCompat.setTransitionName(posterImgView, ShowModel.transitionName(showDetailVM?.show?.value?.id!!))
         Picasso.get().load(showDetailVM?.getShowImage()).fit()
-                // .noFade()
                 .centerCrop()
                 .into(posterImgView, object : Callback {
                     override fun onSuccess() {
@@ -76,4 +74,6 @@ class ShowDetailFragment : Fragment() {
         })
 
     }
+
+
 }

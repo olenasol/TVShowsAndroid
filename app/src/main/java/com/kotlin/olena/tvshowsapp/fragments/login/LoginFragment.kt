@@ -1,28 +1,24 @@
 package com.kotlin.olena.tvshowsapp.fragments.login
 
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.kotlin.olena.tvshowsapp.R
-import com.kotlin.olena.tvshowsapp.activities.MainActivity
-import com.kotlin.olena.tvshowsapp.callbacks.EmailLoginCallback
-import com.kotlin.olena.tvshowsapp.fragments.LoginViewModel
+import com.kotlin.olena.tvshowsapp.fragments.base.BaseFragment
+import com.kotlin.olena.tvshowsapp.fragments.shared.LoginViewModel
 import com.kotlin.olena.tvshowsapp.fragments.registration.RegistrationFragment
+import com.kotlin.olena.tvshowsapp.fragments.show.list.ShowsListFragment
 import kotlinx.android.synthetic.main.fragment_login.*
-import kotlinx.android.synthetic.main.fragment_registration.*
-import org.jetbrains.anko.sdk21.coroutines.onClick
 
 
-class LoginFragment : Fragment() {
+class LoginFragment : BaseFragment<LoginViewModel>(){
 
-    var loginVM: LoginViewModel? = null
+    private var loginVM: LoginViewModel? = null
 
     companion object {
         fun newInstance(): LoginFragment {
@@ -38,19 +34,19 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loginVM = ViewModelProviders.of(activity!!).get(LoginViewModel::class.java)
-        loginVM?.getIsLoggedIn()?.observe(this, Observer<Boolean>{ isLogged->
-            if(isLogged!!){
-                startActivity(Intent(activity, MainActivity::class.java))
-            }else{
+        loginVM?.getIsLoggedIn()?.observe(this, Observer<Boolean> { isLogged ->
+            if (isLogged!!) {
+                fragmentManager?.beginTransaction()?.replace(R.id.main_container, ShowsListFragment.newInstance())?.commit()
+            } else {
                 Toast.makeText(activity, R.string.auth_failed,
                         Toast.LENGTH_SHORT).show()
             }
         })
         loginBtn.setOnClickListener {
-            loginVM?.loginEmail(emailEdt.text.toString(), passwordEdt.text.toString(),activity!!)
+            loginVM?.loginEmail(emailEdt.text.toString(), passwordEdt.text.toString(), activity!!)
         }
         registerTxt.setOnClickListener {
-            fragmentManager?.beginTransaction()?.replace(R.id.start_container,RegistrationFragment.newInstance())?.commit()
+            fragmentManager?.beginTransaction()?.replace(R.id.main_container, RegistrationFragment.newInstance())?.addToBackStack(RegistrationFragment::class.java.simpleName)?.commit()
         }
     }
 

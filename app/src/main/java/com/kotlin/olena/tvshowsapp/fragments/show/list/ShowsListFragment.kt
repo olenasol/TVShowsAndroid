@@ -1,26 +1,28 @@
 package com.kotlin.olena.tvshowsapp.fragments.show.list
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.ViewCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.navigation.NavigationView
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.callbacks.OnShowClickedListener
+import com.kotlin.olena.tvshowsapp.fragments.base.BaseFragment
+import com.kotlin.olena.tvshowsapp.fragments.login.LoginFragment
+import com.kotlin.olena.tvshowsapp.fragments.shared.LoginViewModel
 import com.kotlin.olena.tvshowsapp.fragments.show.detail.ShowDetailFragment
 import com.kotlin.olena.tvshowsapp.fragments.show.detail.ShowDetailViewModel
-import com.kotlin.olena.tvshowsapp.models.ShowModel
 import com.kotlin.olena.tvshowsapp.fragments.show.list.rv.ShowsAdapter
+import com.kotlin.olena.tvshowsapp.models.ShowModel
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_shows_list.*
 
-class ShowsListFragment : Fragment(), OnShowClickedListener {
+class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener, NavigationView.OnNavigationItemSelectedListener {
 
     var showsViewModel: ShowsViewModel? = null
 
@@ -39,6 +41,7 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
         super.onViewCreated(view, savedInstanceState)
         initShowsViewModel()
         initShowsResView()
+        navigationView.setNavigationItemSelectedListener(this)
     }
 
     private fun initShowsViewModel() {
@@ -46,12 +49,19 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
         observeViewModel(showsViewModel)
     }
 
+    /**
+     * need to have adapter as separate variable due to bug
+     * E/RecyclerView: No adapter attached; skipping layout
+     * on Huawei Y7 (problem with reference in spanSizeLookup)
+     */
     private fun initShowsResView() {
-        val gridLayoutManager = GridLayoutManager(context, 2)
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+        val adapter = ShowsAdapter(this)
+        showsRecyclerView.adapter = adapter
+        val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 2)
+
+        gridLayoutManager.spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                val adapter = (showsRecyclerView.adapter as ShowsAdapter)
-                return if (adapter.getItemViewType(position) == adapter.VIEW_SHOW) {
+                return if (adapter.getItemViewType(position) == ShowsAdapter.VIEW_SHOW) {
                     1
                 } else {
                     2
@@ -59,16 +69,15 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
             }
         }
         showsRecyclerView.layoutManager = gridLayoutManager
-        showsRecyclerView.adapter = ShowsAdapter(this)
         if (showsViewModel!!.verifyIfScrollNeeded(
-                        (showsRecyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition(),
-                        (showsRecyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition())) {
-            (showsRecyclerView.layoutManager as GridLayoutManager).scrollToPosition(showsViewModel!!.position)
+                        (showsRecyclerView.layoutManager as androidx.recyclerview.widget.GridLayoutManager).findFirstVisibleItemPosition(),
+                        (showsRecyclerView.layoutManager as androidx.recyclerview.widget.GridLayoutManager).findFirstVisibleItemPosition())) {
+            (showsRecyclerView.layoutManager as androidx.recyclerview.widget.GridLayoutManager).scrollToPosition(showsViewModel!!.position)
         }
-        showsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        showsRecyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val linearLayoutManager: LinearLayoutManager = LinearLayoutManager::class.java.cast(recyclerView?.layoutManager)
+                val linearLayoutManager: androidx.recyclerview.widget.LinearLayoutManager = (recyclerView.layoutManager as androidx.recyclerview.widget.LinearLayoutManager)
                 val totalItem: Int = linearLayoutManager.itemCount
                 val lastVisibleItem: Int = linearLayoutManager.findLastCompletelyVisibleItemPosition()
                 if (totalItem <= lastVisibleItem + 1 && (showsRecyclerView.adapter as ShowsAdapter).listOfShows[lastVisibleItem] == null) {
@@ -92,6 +101,7 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
                 ?.addToBackStack(null)
                 ?.commit()
     }
+
     override fun onFavouriteClicked(position: Int) {
         showsViewModel?.setShowToFavourite(position)
     }
@@ -104,5 +114,15 @@ class ShowsListFragment : Fragment(), OnShowClickedListener {
             }
         })
     }
-
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        val id: Int = item.itemId
+        when (id) {
+            R.id.nav_logout -> {
+                ViewModelProviders.of(activity!!).get(LoginViewModel::class.java).logout()
+                fragmentManager?.beginTransaction()?.replace(R.id.main_container,
+                        LoginFragment.newInstance())?.commit()
+            }
+        }
+        return true
+    }
 }

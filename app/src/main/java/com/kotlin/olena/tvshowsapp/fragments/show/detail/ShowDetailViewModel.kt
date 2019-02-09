@@ -1,11 +1,13 @@
 package com.kotlin.olena.tvshowsapp.fragments.show.detail
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.kotlin.olena.tvshowsapp.fragments.base.BaseViewModel
 import com.kotlin.olena.tvshowsapp.models.ImageModel
 import com.kotlin.olena.tvshowsapp.models.ShowModel
 
-class ShowDetailViewModel : ViewModel() {
+class ShowDetailViewModel (application: Application) : BaseViewModel(application) {
     var show: MutableLiveData<ShowModel> = MutableLiveData()
 
     fun selectShow(id:Int,url: String){

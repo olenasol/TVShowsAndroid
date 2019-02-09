@@ -1,6 +1,6 @@
 package com.kotlin.olena.tvshowsapp.fragments.show.list
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.kotlin.olena.tvshowsapp.models.ShowModel
 import com.kotlin.olena.tvshowsapp.rest.ApiClient
 import com.kotlin.olena.tvshowsapp.rest.ApiInterface

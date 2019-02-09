@@ -1,15 +1,15 @@
 package com.kotlin.olena.tvshowsapp.fragments.show.list.rv
 
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
-import android.util.Log
+import androidx.recyclerview.widget.DiffUtil
 import com.kotlin.olena.tvshowsapp.models.ShowModel
 
-class ShowListDiffCallback (val prevList:MutableList<ShowModel?>,
-                            val newList:MutableList<ShowModel?>) : DiffUtil.Callback() {
+class ShowListDiffCallback(private val prevList: MutableList<ShowModel?>,
+                           private val newList: MutableList<ShowModel?>) : DiffUtil.Callback() {
     companion object {
-        val ARGS_FAVOURITE: String = "ARGS_FAVOURITE"
+        const val ARGS_FAVOURITE: String = "ARGS_FAVOURITE"
     }
+
     override fun getOldListSize(): Int {
         return prevList.size
     }
