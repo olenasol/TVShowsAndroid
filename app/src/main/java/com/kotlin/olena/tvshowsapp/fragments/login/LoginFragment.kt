@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.kotlin.olena.tvshowsapp.R
-import com.kotlin.olena.tvshowsapp.fragments.base.BaseFragment
+import com.kotlin.olena.tvshowsapp.base.BaseFragment
 import com.kotlin.olena.tvshowsapp.fragments.shared.LoginViewModel
 import com.kotlin.olena.tvshowsapp.fragments.registration.RegistrationFragment
 import com.kotlin.olena.tvshowsapp.fragments.show.list.ShowsListFragment

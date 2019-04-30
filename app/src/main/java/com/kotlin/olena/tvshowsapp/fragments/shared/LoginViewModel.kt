@@ -3,10 +3,9 @@ package com.kotlin.olena.tvshowsapp.fragments.shared
 import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import android.text.TextUtils
 import com.google.firebase.auth.FirebaseAuth
-import com.kotlin.olena.tvshowsapp.fragments.base.BaseViewModel
+import com.kotlin.olena.tvshowsapp.base.BaseViewModel
 
 class LoginViewModel(application: Application) : BaseViewModel(application){
 

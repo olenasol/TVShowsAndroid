@@ -11,7 +11,7 @@ import com.kotlin.olena.tvshowsapp.GlideApp
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.callbacks.OnShowClickedListener
 import com.kotlin.olena.tvshowsapp.fragments.show.list.rv.ShowListDiffCallback.Companion.ARGS_FAVOURITE
-import com.kotlin.olena.tvshowsapp.models.ShowModel
+import com.kotlin.olena.tvshowsapp.data.models.Show
 import kotlinx.android.synthetic.main.item_show.view.*
 
 class ShowsAdapter(private val listener: OnShowClickedListener) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
@@ -21,7 +21,7 @@ class ShowsAdapter(private val listener: OnShowClickedListener) : androidx.recyc
         const val VIEW_PROGRESS: Int = 1
     }
 
-    var listOfShows: MutableList<ShowModel?> = mutableListOf()
+    var listOfShows: MutableList<Show?> = mutableListOf()
     lateinit var context:Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
@@ -39,15 +39,16 @@ class ShowsAdapter(private val listener: OnShowClickedListener) : androidx.recyc
 
     override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         if (holder is ShowsHolder) {
-            GlideApp.with(context).load(listOfShows[position]?.image?.original).fitCenter()
-                    .centerCrop().into(holder.showImageView)
+            GlideApp.with(context).load(listOfShows[position]?.image?.originalImageUrl)
+                    .into(holder.showImageView)
             if (listOfShows[position]?.isFavourite!!) {
                 holder.favouriteBtn.setImageResource(R.drawable.ic_star_full)
             } else {
                 holder.favouriteBtn.setImageResource(R.drawable.ic_star_border)
             }
-            ViewCompat.setTransitionName(holder.showImageView, ShowModel.transitionName(listOfShows[position]!!.id))
-            holder.itemLayout.setOnClickListener {
+            listOfShows[position]?.viewId ?: run { listOfShows[position]?.viewId = ViewCompat.generateViewId() }
+            ViewCompat.setTransitionName(holder.showImageView, listOfShows[position]!!.viewId.toString())
+            holder.itemView.setOnClickListener {
                 listener.onShowClicked(holder.adapterPosition, listOfShows[holder.adapterPosition]!!,
                         holder.showImageView)
             }
@@ -80,17 +81,18 @@ class ShowsAdapter(private val listener: OnShowClickedListener) : androidx.recyc
             VIEW_PROGRESS
     }
 
-    fun setShowsList(list: MutableList<ShowModel?>) {
+    fun setShowsList(list: List<Show>) {
+        val tempList: MutableList<Show?> = list.toMutableList()
+        tempList.add(null)
         val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(
-                ShowListDiffCallback(listOfShows, list))
+                ShowListDiffCallback(listOfShows, tempList))
         diffResult.dispatchUpdatesTo(this)
-        this.listOfShows = list
+        this.listOfShows = tempList
     }
 
 
     class ShowsHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val showImageView = itemView.showImageView!!
-        val itemLayout = itemView.itemLayout!!
         val favouriteBtn = itemView.favouriteBtn!!
     }
 

@@ -1,34 +1,31 @@
 package com.kotlin.olena.tvshowsapp.fragments.show.list
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.kotlin.olena.tvshowsapp.models.ShowModel
-import com.kotlin.olena.tvshowsapp.rest.ApiClient
-import com.kotlin.olena.tvshowsapp.rest.ApiInterface
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.kotlin.olena.tvshowsapp.data.db.AppDatabase
+import com.kotlin.olena.tvshowsapp.data.models.Show
+import com.kotlin.olena.tvshowsapp.data.networking.*
 
-class ShowsRepository {
+class ShowsRepository (val database:AppDatabase){
 
-    fun getShowsFromServer(page: Int,data: MutableLiveData<MutableList<ShowModel?>>) {
-        var list = mutableListOf<ShowModel?>()
-        if (data.value != null){
-            list = data.value!!
-            list.removeAt(list.size-1)
-        }
-        val apiService = ApiClient.getClient().create(ApiInterface::class.java)
-        val call: Call<MutableList<ShowModel?>> = apiService.getShowsByPage(page)
-        call.enqueue(object : Callback<MutableList<ShowModel?>> {
-            override fun onResponse(call: Call<MutableList<ShowModel?>>?, response: Response<MutableList<ShowModel?>>?) {
-                list.addAll(response?.body()!!.asIterable())
-                list.add(null)
-                data.postValue(list)
+    fun getShowsFromServer(page: Int): LiveData<Resource<List<Show>>> {
+        return object : NetworkBoundResource<List<Show>, List<Show>>() {
+            override fun saveCallResult(item: List<Show>) {
+                database.getShowsDao().insertShows(item)
             }
 
-            override fun onFailure(call: Call<MutableList<ShowModel?>>?, t: Throwable?) {
-                data.value = null
-                //TODO handle error
+            override fun shouldFetch(data: List<Show>?): Boolean {
+                return data == null || data.isEmpty()
             }
-        })
+
+            override fun loadFromDb(): LiveData<List<Show>> {
+                return database.getShowsDao().getShows()
+            }
+
+            override fun createCall(): LiveData<ApiResponse<List<Show>>> {
+                return ApiClient.getClient().create(ApiInterface::class.java).getShowsByPage(page)
+            }
+
+        }.asLiveData()
     }
 }

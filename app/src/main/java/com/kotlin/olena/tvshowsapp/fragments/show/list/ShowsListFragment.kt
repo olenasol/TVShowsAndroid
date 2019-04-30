@@ -12,13 +12,12 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.callbacks.OnShowClickedListener
-import com.kotlin.olena.tvshowsapp.fragments.base.BaseFragment
+import com.kotlin.olena.tvshowsapp.base.BaseFragment
 import com.kotlin.olena.tvshowsapp.fragments.login.LoginFragment
 import com.kotlin.olena.tvshowsapp.fragments.shared.LoginViewModel
 import com.kotlin.olena.tvshowsapp.fragments.show.detail.ShowDetailFragment
-import com.kotlin.olena.tvshowsapp.fragments.show.detail.ShowDetailViewModel
 import com.kotlin.olena.tvshowsapp.fragments.show.list.rv.ShowsAdapter
-import com.kotlin.olena.tvshowsapp.models.ShowModel
+import com.kotlin.olena.tvshowsapp.data.models.Show
 import kotlinx.android.synthetic.main.fragment_shows_list.*
 
 class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener, NavigationView.OnNavigationItemSelectedListener {
@@ -65,11 +64,11 @@ class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener,
             }
         }
         showsRecyclerView.layoutManager = gridLayoutManager
-        if (viewModel.verifyIfScrollNeeded(
-                        (showsRecyclerView.layoutManager as androidx.recyclerview.widget.GridLayoutManager).findFirstVisibleItemPosition(),
-                        (showsRecyclerView.layoutManager as androidx.recyclerview.widget.GridLayoutManager).findFirstVisibleItemPosition())) {
-            (showsRecyclerView.layoutManager as androidx.recyclerview.widget.GridLayoutManager).scrollToPosition(viewModel.position)
-        }
+//        if (viewModel.verifyIfScrollNeeded(
+//                        (showsRecyclerView.layoutManager as androidx.recyclerview.widget.GridLayoutManager).findFirstVisibleItemPosition(),
+//                        (showsRecyclerView.layoutManager as androidx.recyclerview.widget.GridLayoutManager).findFirstVisibleItemPosition())) {
+//            (showsRecyclerView.layoutManager as androidx.recyclerview.widget.GridLayoutManager).scrollToPosition(viewModel.position)
+//        }
         showsRecyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -84,13 +83,11 @@ class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener,
 
     }
 
-    override fun onShowClicked(position: Int, show: ShowModel, view: ImageView) {
+    override fun onShowClicked(position: Int, show: Show, view: ImageView) {
         val transitionName: String = ViewCompat.getTransitionName(view)!!
-        val fragment: ShowDetailFragment = ShowDetailFragment.newInstance(show.id, show.image.original, transitionName)
-        val showDetailVM: ShowDetailViewModel = ViewModelProviders.of(activity!!).get(ShowDetailViewModel::class.java)
-        showDetailVM.selectShow(show.id, show.image.original)
+        val fragment: ShowDetailFragment = ShowDetailFragment.newInstance(show.id, show.image.originalImageUrl, transitionName)
         viewModel.position = position
-        replaceFragment(fragment,true,view)
+        replaceFragment(fragment,true, view)
     }
 
     override fun onFavouriteClicked(position: Int) {
@@ -99,9 +96,11 @@ class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener,
 
 
     private fun observeViewModel() {
-        viewModel.listShowsObservable.observe(this, Observer<MutableList<ShowModel?>> { shows ->
-            if (shows != null) {
-                (showsRecyclerView.adapter as ShowsAdapter).setShowsList(shows)
+        viewModel.listShowsObservable.observe(this, Observer { listResource ->
+            // we don't need any null checks here for the adapter since LiveData guarantees that
+            // it won't call us if fragment is stopped or not started.
+            if (listResource?.data != null) {
+                (showsRecyclerView.adapter as ShowsAdapter).setShowsList(listResource.data)
             }
         })
     }

@@ -1,6 +1,7 @@
 package com.kotlin.olena.tvshowsapp.fragments.show.detail
 
 
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.transition.TransitionInflater
@@ -8,19 +9,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.kotlin.olena.tvshowsapp.GlideApp
 import com.kotlin.olena.tvshowsapp.R
-import com.kotlin.olena.tvshowsapp.fragments.base.BaseFragment
-import com.kotlin.olena.tvshowsapp.models.ShowModel
+import com.kotlin.olena.tvshowsapp.base.BaseFragment
+import com.kotlin.olena.tvshowsapp.base.BaseViewModel
 import kotlinx.android.synthetic.main.fragment_show_detail.*
 
 
-class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
+class ShowDetailFragment : BaseFragment<BaseViewModel>() {
 
-    override fun provideViewModel(): ShowDetailViewModel {
-        return ViewModelProviders.of(activity!!).get(ShowDetailViewModel::class.java)
+    override fun provideViewModel(): BaseViewModel {
+        return ViewModelProviders.of(activity!!).get(BaseViewModel::class.java)
     }
 
     var showId: Int = 0
@@ -44,6 +49,7 @@ class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
         postponeEnterTransition()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+            sharedElementReturnTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         }
     }
 
@@ -56,24 +62,22 @@ class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ViewCompat.setTransitionName(posterImgView, ShowModel.transitionName(viewModel.show.value?.id!!))
-//        GlideApp.with(context!!).load(viewModel.getShowImage()).fitCenter()
-//                .centerCrop()
-//                .into(posterImgView, object : Callback {
-//                    override fun onSuccess() {
-//                        startPostponedEnterTransition()
-//                    }
-//
-//                    override fun onError(e: Exception?) {
-//                        startPostponedEnterTransition()
-//                    }
-//
-//                })
-        viewModel.show.observe(this, Observer { show ->
-            if (show != null)
-                GlideApp.with(context!!).load(show.image.original).into(posterImgView)
-        })
+        ViewCompat.setTransitionName(posterImgView, transitionName)
 
+        GlideApp.with(context!!).load(posterUrl)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .listener(object : RequestListener<Drawable>{
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        startPostponedEnterTransition()
+                        return false
+                    }
+
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        startPostponedEnterTransition()
+                        return false
+                    }
+
+                } ).into(posterImgView)
     }
 
 
