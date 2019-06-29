@@ -1,44 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="32dp"
-    tools:context=".fragments.registration.RegistrationFragment">
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/emailRegistrationEdt"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:layout_marginTop="56dp"
-        android:layout_marginBottom="32dp"
-        android:hint="@string/email"/>
+        android:orientation="vertical"
+        android:padding="32dp"
+        tools:context=".screens.prelogin.registration.RegistrationFragment">
 
-    <EditText
-        android:id="@+id/passwordRegistrationEdt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:inputType="textPassword"
-        android:hint="@string/password"
-        />
-    <EditText
-        android:id="@+id/confirmPasswordEdt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:layout_marginBottom="32dp"
-        android:hint="@string/confirm_password"
-        />
-    <Button
-        android:id="@+id/registerBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/register"
-        android:textColor="@android:color/white"
-        android:background="@color/colorPrimary"
-        />
+        <EditText
+            android:id="@+id/emailEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:layout_marginBottom="32dp"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/passwordEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/confirmPasswordEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/submitBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="@string/register"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+</ScrollView>

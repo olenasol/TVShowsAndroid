@@ -12,8 +12,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity
 data class Show(@PrimaryKey(autoGenerate = false)
-                     @field:SerializedName("id") public var id:Int,
-                @Embedded@field:SerializedName("image")public val image:ImageModel,
+                     @field:SerializedName("id") var id:Int,
+                @Embedded@field:SerializedName("image") val image:ImageModel,
                 var isFavourite: Boolean):Parcelable{
     constructor():this(0,ImageModel(""),false)
     @Ignore@IgnoredOnParcel

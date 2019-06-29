@@ -1,17 +1,22 @@
 package com.kotlin.olena.tvshowsapp.base
 
 import android.content.Context
+import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.AnimRes
-import androidx.core.view.ViewCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.kotlin.olena.tvshowsapp.R
+import es.dmoral.toasty.Toasty
 
-abstract class BaseFragment<VM : BaseViewModel>():Fragment(){
-    protected val viewModel by lazy { provideViewModel() }
+abstract class BaseFragment<VM : BaseViewModel>() : Fragment() {
+    protected lateinit var viewModel: VM
 
     abstract fun provideViewModel(): VM
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = provideViewModel()
+    }
 
     protected fun hideKeyboard() {
         val view = activity?.currentFocus
@@ -26,55 +31,24 @@ abstract class BaseFragment<VM : BaseViewModel>():Fragment(){
         }
     }
 
-    protected fun replaceFragment(fragment: BaseFragment<*>) {
-        replaceFragment(fragment, true,
-                R.anim.frag_fade_in, R.anim.frag_fade_out,
-                R.anim.frag_fade_in, R.anim.frag_fade_out)
+    protected fun showLoading() {
+        hideKeyboard()
+        (activity as MainActivity).changeLoadingState(true)
     }
 
-    protected fun replaceFragment(fragment: BaseFragment<*>,
-                                  addToBackStack: Boolean) {
-        replaceFragment(fragment, addToBackStack,
-                R.anim.frag_fade_in, R.anim.frag_fade_out,
-                R.anim.frag_fade_in, R.anim.frag_fade_out)
+    protected fun hideLoading() {
+        (activity as MainActivity).changeLoadingState(false)
     }
 
-    protected fun replaceFragment(fragment: BaseFragment<*>,
-                                  @AnimRes enterAnimId: Int,
-                                  @AnimRes exitAnimId: Int,
-                                  @AnimRes popEnterAnimId: Int,
-                                  @AnimRes popExitAnimId: Int) {
-        replaceFragment(fragment, true, enterAnimId, exitAnimId, popEnterAnimId, popExitAnimId)
-    }
-
-    protected fun replaceFragment(fragment: BaseFragment<*>,
-                                  addToBackStack: Boolean,
-                                  @AnimRes enterAnimId: Int,
-                                  @AnimRes exitAnimId: Int,
-                                  @AnimRes popEnterAnimId: Int,
-                                  @AnimRes popExitAnimId: Int) {
-        val transaction = fragmentManager?.beginTransaction()
-        transaction?.setCustomAnimations(enterAnimId, exitAnimId, popEnterAnimId, popExitAnimId)
-        transaction?.replace(R.id.main_container, fragment)
-        if (addToBackStack) {
-            transaction?.addToBackStack(fragment.javaClass.simpleName)
+    protected fun showError(description: String?) {
+        context?.let { context ->
+            Toasty.error(context, description.toString(), Toast.LENGTH_SHORT, true).show()
         }
-        transaction?.commit()
     }
 
-    protected fun replaceFragment(fragment: BaseFragment<*>, addToBackStack: Boolean = true, sharedElement: View) {
-        val transaction = fragmentManager?.beginTransaction()
-        transaction?.setCustomAnimations(
-                R.anim.frag_fade_in,
-                R.anim.frag_fade_out,
-                R.anim.frag_fade_in,
-                R.anim.frag_fade_out)
-        ViewCompat.getTransitionName(sharedElement)?.let { transaction?.addSharedElement(sharedElement, it) }
-        transaction?.replace(R.id.main_container, fragment)
-        if (addToBackStack) {
-            transaction?.addToBackStack(fragment.javaClass.simpleName)
+    protected fun showSuccess(text: String) {
+        context?.let { context ->
+            Toasty.success(context, text, Toast.LENGTH_SHORT, true).show()
         }
-        transaction?.commit()
     }
-
 }

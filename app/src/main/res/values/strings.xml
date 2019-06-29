@@ -11,4 +11,7 @@
     <string name="logout">Logout</string>
     <string name="auth_failed">Authentication failed.</string>
     <string name="register_failed">Registration failed</string>
+    <string name="enter_data">Please enter needed data</string>
+    <string name="passwords_different">Passwords are not the same</string>
+    <string name="registered_successfully">Registered successfully</string>
 </resources>
