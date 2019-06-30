@@ -5,12 +5,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.Database
 import com.kotlin.olena.tvshowsapp.data.models.Show
+import com.kotlin.olena.tvshowsapp.data.models.ShowDetails
 
 
-@Database(entities = [Show::class], version = 2)
+@Database(entities = [Show::class,ShowDetails::class], version = 5)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getShowsDao(): ShowsDao
+
+    abstract fun getShowDetailsDao():ShowDetailsDao
 
     companion object {
 

@@ -14,4 +14,8 @@
     <string name="enter_data">Please enter needed data</string>
     <string name="passwords_different">Passwords are not the same</string>
     <string name="registered_successfully">Registered successfully</string>
+    <string name="rating">Rating: %.02f</string>
+    <string name="status">Status: %s</string>
+    <string name="language">Language: %s</string>
+    <string name="officialSite">Official site: %s</string>
 </resources>

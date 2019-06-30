@@ -7,8 +7,9 @@ import com.kotlin.olena.tvshowsapp.base.TVShowsApplication
 import com.kotlin.olena.tvshowsapp.data.networking.Resource
 import com.kotlin.olena.tvshowsapp.data.networking.Status
 import com.kotlin.olena.tvshowsapp.screens.prelogin.PreloginViewModel
+import javax.inject.Inject
 
-class RegistrationViewModel(application: Application) : PreloginViewModel(application) {
+class RegistrationViewModel @Inject constructor(application: Application) : PreloginViewModel(application) {
 
     fun registerUser(email:String,password:String,confirmPassword:String){
         if (isInputValid(email,password,confirmPassword)) {

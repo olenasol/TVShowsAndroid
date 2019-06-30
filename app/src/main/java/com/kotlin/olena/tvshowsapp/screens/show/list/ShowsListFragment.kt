@@ -8,14 +8,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.base.BaseFragment
-import com.kotlin.olena.tvshowsapp.callbacks.OnShowClickedListener
+import com.kotlin.olena.tvshowsapp.data.models.ImageModel
+import com.kotlin.olena.tvshowsapp.screens.show.list.rv.OnShowClickedListener
 import com.kotlin.olena.tvshowsapp.data.models.Show
 import com.kotlin.olena.tvshowsapp.data.networking.Resource
 import com.kotlin.olena.tvshowsapp.data.networking.Status
+import com.kotlin.olena.tvshowsapp.di.injector
 import com.kotlin.olena.tvshowsapp.other.replaceFragment
 import com.kotlin.olena.tvshowsapp.screens.prelogin.login.LoginFragment
 import com.kotlin.olena.tvshowsapp.screens.show.detail.ShowDetailFragment
@@ -26,7 +31,8 @@ import kotlinx.android.synthetic.main.fragment_shows_list.*
 class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener, NavigationView.OnNavigationItemSelectedListener {
 
     override fun provideViewModel(): ShowsViewModel {
-        return ViewModelProviders.of(this).get(ShowsViewModel::class.java)
+        return ViewModelProviders.of(this, activity?.injector?.getShowsViewModelFactory())
+                .get(ShowsViewModel::class.java)
     }
 
     companion object {
@@ -40,9 +46,7 @@ class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener,
             Observer<Resource<List<Show>>> { resource ->
                 if (resource != null) {
                     if (resource.status == Status.ERROR) {
-                        context?.let {context->
-                            Toasty.error(context, resource.message.toString(), Toast.LENGTH_SHORT, true).show()
-                        }
+                        error(resource.message.toString())
                     } else {
                         if (resource.data != null) {
                             (showsRecyclerView.adapter as ShowsAdapter).setShowsList(resource.data)
@@ -61,7 +65,16 @@ class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener,
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         initShowsResView()
+        initSearch()
         navigationView.setNavigationItemSelectedListener(this)
+    }
+
+    private fun initSearch(){
+        appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            floatingSearchView.translationY = verticalOffset.toFloat() })
+        floatingSearchView.setOnQueryChangeListener { _, newQuery ->
+            viewModel.onSearchInputChanged(newQuery)
+        }
     }
 
     /**
@@ -87,7 +100,7 @@ class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener,
         showsRecyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val linearLayoutManager: androidx.recyclerview.widget.LinearLayoutManager = (recyclerView.layoutManager as androidx.recyclerview.widget.LinearLayoutManager)
+                val linearLayoutManager:LinearLayoutManager = (recyclerView.layoutManager as LinearLayoutManager)
                 val totalItem: Int = linearLayoutManager.itemCount
                 val lastVisibleItem: Int = linearLayoutManager.findLastCompletelyVisibleItemPosition()
                 if (totalItem <= lastVisibleItem + 1 && (showsRecyclerView.adapter as ShowsAdapter).listOfShows[lastVisibleItem] == null) {

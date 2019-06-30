@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -19,37 +20,60 @@ import com.kotlin.olena.tvshowsapp.GlideApp
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.base.BaseFragment
 import com.kotlin.olena.tvshowsapp.base.BaseViewModel
+import com.kotlin.olena.tvshowsapp.data.models.ShowDetails
+import com.kotlin.olena.tvshowsapp.data.networking.Resource
+import com.kotlin.olena.tvshowsapp.data.networking.Status
+import com.kotlin.olena.tvshowsapp.di.injector
 import kotlinx.android.synthetic.main.fragment_show_detail.*
 
 
-class ShowDetailFragment : BaseFragment<BaseViewModel>() {
+class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
 
-    override fun provideViewModel(): BaseViewModel {
-        return ViewModelProviders.of(activity!!).get(BaseViewModel::class.java)
+    override fun provideViewModel(): ShowDetailViewModel {
+        return ViewModelProviders.of(this, activity?.injector?.getShowDetailViewModelFactory())
+                .get(ShowDetailViewModel::class.java)
     }
-
-    var showId: Int = 0
-    var posterUrl: String = ""
-
 
     companion object {
 
+        const val ARG_ID = "arg_id"
+        const val ARGS_POSTER = "args_poster"
+
         fun newInstance(id: Int, poster: String): ShowDetailFragment {
             val fragment = ShowDetailFragment()
-            fragment.showId = id
-            fragment.posterUrl = poster
+            val bundle =  Bundle()
+            bundle.putInt(ARG_ID,id)
+            bundle.putString(ARGS_POSTER, poster)
+            fragment.arguments = bundle
             return fragment
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        postponeEnterTransition()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-            sharedElementReturnTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-        }
-    }
+    //region Observers
+    val showDetailsObserver = Observer<Resource<ShowDetails>> { resource ->
+                if (resource != null) {
+                    when(resource.status){
+                        Status.LOADING->{
+                            showLoading()
+                        }
+                        Status.SUCCESS ->{
+                            hideLoading()
+                            if(resource.data != null) {
+                                txtName.text = resource.data.name
+                                txtRating.text = getString(R.string.rating,resource.data.rating?.rating)
+                                txtLanguage.text = getString(R.string.language,resource.data.language)
+                                txtStatus.text = getString(R.string.status,resource.data.status)
+                            }
+                        }
+                        Status.ERROR->{
+                            hideLoading()
+                            error(resource.message.toString())
+                        }
+                    }
+                }
+            }
+
+    //endregion
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -59,21 +83,26 @@ class ShowDetailFragment : BaseFragment<BaseViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        GlideApp.with(context!!).load(posterUrl)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .listener(object : RequestListener<Drawable>{
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        startPostponedEnterTransition()
-                        return false
-                    }
-
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        startPostponedEnterTransition()
-                        return false
-                    }
-
-                } ).into(posterImgView)
+        context?.let { context ->
+            GlideApp.with(context).load(arguments?.getString(ARGS_POSTER))
+                    .into(posterImgView)
+        }
+        viewModel.loadDetails(arguments?.getInt(ARG_ID))
+        subscribeToObservers()
     }
 
+    private fun subscribeToObservers() {
+        viewModel.getShowDetails().observe(this.viewLifecycleOwner,showDetailsObserver)
+    }
+
+    override fun showLoading(){
+        loader.visibility = View.VISIBLE
+        detailsLayout.visibility = View.GONE
+    }
+
+    override fun hideLoading() {
+        loader.visibility = View.GONE
+        detailsLayout.visibility = View.VISIBLE
+    }
 
 }

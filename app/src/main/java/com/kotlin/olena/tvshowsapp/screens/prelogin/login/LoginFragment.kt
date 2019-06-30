@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.data.networking.Resource
 import com.kotlin.olena.tvshowsapp.data.networking.Status
+import com.kotlin.olena.tvshowsapp.di.injector
 import com.kotlin.olena.tvshowsapp.other.replaceFragment
 import com.kotlin.olena.tvshowsapp.screens.prelogin.PreloginFragment
 import com.kotlin.olena.tvshowsapp.screens.prelogin.registration.RegistrationFragment
@@ -20,7 +21,8 @@ import kotlinx.android.synthetic.main.fragment_login.*
 class LoginFragment : PreloginFragment<LoginViewModel>() {
 
     override fun provideViewModel(): LoginViewModel {
-        return ViewModelProviders.of(this).get(LoginViewModel::class.java)
+        return ViewModelProviders.of(this, activity?.injector?.getLoginViewModelFactory())
+                .get(LoginViewModel::class.java)
     }
 
     //region Observer

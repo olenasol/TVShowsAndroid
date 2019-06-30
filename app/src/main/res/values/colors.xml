@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#00b686</color>
     <color name="colorAccent">#6effe8</color>
     <color name="loader_bg">#c6000000</color>
+    <color name="halftransparent">#80000000</color>
 </resources>

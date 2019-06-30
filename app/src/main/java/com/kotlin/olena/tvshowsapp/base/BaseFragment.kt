@@ -31,12 +31,12 @@ abstract class BaseFragment<VM : BaseViewModel>() : Fragment() {
         }
     }
 
-    protected fun showLoading() {
+    protected open fun showLoading() {
         hideKeyboard()
         (activity as MainActivity).changeLoadingState(true)
     }
 
-    protected fun hideLoading() {
+    protected open fun hideLoading() {
         (activity as MainActivity).changeLoadingState(false)
     }
 

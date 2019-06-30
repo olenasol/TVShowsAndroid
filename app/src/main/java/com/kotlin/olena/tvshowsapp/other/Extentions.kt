@@ -14,11 +14,11 @@ inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Fragmen
 fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = false) {
     if (addToBackStack) {
         supportFragmentManager.inTransaction {
-            replaceWithAnimation(frameId, fragment).addToBackStack(fragment.javaClass.simpleName)
+            replace(frameId, fragment).addToBackStack(fragment.javaClass.simpleName)
         }
     } else
         supportFragmentManager.inTransaction {
-            replaceWithAnimation(frameId, fragment)
+            replace(frameId, fragment)
         }
 }
 
@@ -26,8 +26,8 @@ fun FragmentTransaction.replaceWithAnimation(frameId: Int, fragment: Fragment): 
     return this.replace(frameId, fragment).setCustomAnimations(
             R.anim.frag_fade_in,
             R.anim.frag_fade_out,
-            R.anim.frag_fade_in,
-            R.anim.frag_fade_out)
+            R.anim.frag_fade_out,
+            R.anim.frag_fade_in)
 }
 
 fun Fragment.replaceFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = false) {

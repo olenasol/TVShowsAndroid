@@ -1,11 +1,13 @@
 package com.kotlin.olena.tvshowsapp.screens.show.list
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.kotlin.olena.tvshowsapp.data.db.AppDatabase
 import com.kotlin.olena.tvshowsapp.data.models.Show
 import com.kotlin.olena.tvshowsapp.data.networking.*
+import javax.inject.Inject
 
-class ShowsRepository (val database:AppDatabase){
+class ShowsRepository @Inject constructor(val database:AppDatabase, val api:ApiInterface){
 
     fun getShowsFromServer(page: Int): LiveData<Resource<List<Show>>> {
         return object : NetworkBoundResource<List<Show>, List<Show>>() {
@@ -22,7 +24,7 @@ class ShowsRepository (val database:AppDatabase){
             }
 
             override fun createCall(): LiveData<ApiResponse<List<Show>>> {
-                return ApiClient.getClient().create(ApiInterface::class.java).getShowsByPage(page)
+                return api.getShowsByPage(page)
             }
 
         }.asLiveData()

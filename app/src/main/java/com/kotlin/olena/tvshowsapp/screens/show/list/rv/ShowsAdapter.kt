@@ -1,16 +1,15 @@
-package com.kotlin.olena.tvshowsapp.fragments.show.list.rv
+package com.kotlin.olena.tvshowsapp.screens.show.list.rv
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.kotlin.olena.tvshowsapp.GlideApp
 import com.kotlin.olena.tvshowsapp.R
-import com.kotlin.olena.tvshowsapp.callbacks.OnShowClickedListener
-import com.kotlin.olena.tvshowsapp.fragments.show.list.rv.ShowListDiffCallback.Companion.ARGS_FAVOURITE
+import com.kotlin.olena.tvshowsapp.screens.show.list.rv.ShowListDiffCallback.Companion.ARGS_FAVOURITE
 import com.kotlin.olena.tvshowsapp.data.models.Show
 import kotlinx.android.synthetic.main.item_show.view.*
 
@@ -40,17 +39,15 @@ class ShowsAdapter(private val listener: OnShowClickedListener) : androidx.recyc
     override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         if (holder is ShowsHolder) {
             GlideApp.with(context).load(listOfShows[position]?.image?.originalImageUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
                     .into(holder.showImageView)
             if (listOfShows[position]?.isFavourite!!) {
                 holder.favouriteBtn.setImageResource(R.drawable.ic_star_full)
             } else {
                 holder.favouriteBtn.setImageResource(R.drawable.ic_star_border)
             }
-            listOfShows[position]?.viewId ?: run { listOfShows[position]?.viewId = ViewCompat.generateViewId() }
-            ViewCompat.setTransitionName(holder.showImageView, listOfShows[position]!!.viewId.toString())
             holder.itemView.setOnClickListener {
-                listener.onShowClicked(holder.adapterPosition, listOfShows[holder.adapterPosition]!!,
-                        holder.showImageView)
+                listener.onShowClicked(holder.adapterPosition, listOfShows[holder.adapterPosition]!!)
             }
             holder.favouriteBtn.setOnClickListener {
                 listener.onFavouriteClicked(holder.adapterPosition)

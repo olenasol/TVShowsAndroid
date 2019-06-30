@@ -10,15 +10,15 @@ import androidx.lifecycle.ViewModelProviders
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.data.networking.Resource
 import com.kotlin.olena.tvshowsapp.data.networking.Status
-import com.kotlin.olena.tvshowsapp.other.replaceFragment
+import com.kotlin.olena.tvshowsapp.di.injector
 import com.kotlin.olena.tvshowsapp.screens.prelogin.PreloginFragment
-import com.kotlin.olena.tvshowsapp.screens.prelogin.login.LoginFragment
 import kotlinx.android.synthetic.main.fragment_registration.*
 
 class RegistrationFragment : PreloginFragment<RegistrationViewModel>() {
 
     override fun provideViewModel(): RegistrationViewModel {
-        return ViewModelProviders.of(this).get(RegistrationViewModel::class.java)
+        return ViewModelProviders.of(this, activity?.injector?.getRegistrationViewModelFactory())
+                .get(RegistrationViewModel::class.java)
     }
 
     companion object {

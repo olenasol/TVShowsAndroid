@@ -1,4 +1,4 @@
-package com.kotlin.olena.tvshowsapp.fragments.show.list.rv
+package com.kotlin.olena.tvshowsapp.screens.show.list.rv
 
 import android.os.Bundle
 import androidx.recyclerview.widget.DiffUtil
