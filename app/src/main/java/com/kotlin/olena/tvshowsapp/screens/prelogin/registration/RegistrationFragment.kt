@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.data.networking.Resource
 import com.kotlin.olena.tvshowsapp.data.networking.Status
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_registration.*
 class RegistrationFragment : PreloginFragment<RegistrationViewModel>() {
 
     override fun provideViewModel(): RegistrationViewModel {
-        return ViewModelProviders.of(this, activity?.injector?.getRegistrationViewModelFactory())
+        return ViewModelProvider(this, activity?.injector?.getRegistrationViewModelFactory() as ViewModelProvider.Factory)
                 .get(RegistrationViewModel::class.java)
     }
 
@@ -35,7 +35,7 @@ class RegistrationFragment : PreloginFragment<RegistrationViewModel>() {
                 confirmPasswordEdt.clearFocus()
             }
             if (resource.status == Status.SUCCESS) {
-                fragmentManager?.popBackStack()
+                parentFragmentManager.popBackStack()
                 showSuccess(getString(R.string.registered_successfully))
             }
         }

@@ -13,7 +13,7 @@ class ShowDetailViewModel @Inject constructor(application: Application, val repo
 
     private var showDetails: LiveData<Resource<ShowDetails>> = MutableLiveData()
 
-    fun getShowDetails() = showDetails as LiveData<Resource<ShowDetails>>
+    fun getShowDetails() = showDetails
 
     fun loadDetails(id: Int?) {
         id?.let {

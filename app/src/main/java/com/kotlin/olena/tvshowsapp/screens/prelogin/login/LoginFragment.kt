@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.data.networking.Resource
 import com.kotlin.olena.tvshowsapp.data.networking.Status
@@ -21,12 +21,12 @@ import kotlinx.android.synthetic.main.fragment_login.*
 class LoginFragment : PreloginFragment<LoginViewModel>() {
 
     override fun provideViewModel(): LoginViewModel {
-        return ViewModelProviders.of(this, activity?.injector?.getLoginViewModelFactory())
+        return ViewModelProvider(this.viewModelStore, activity?.injector?.getLoginViewModelFactory() as ViewModelProvider.Factory)
                 .get(LoginViewModel::class.java)
     }
 
     //region Observer
-    val loginObserver = Observer<Resource<Void>?> { resource ->
+    private val loginObserver = Observer<Resource<Void>?> { resource ->
         if (resource != null) {
             handleStatus(resource)
             if (resource.status == Status.SUCCESS) {

@@ -1,25 +1,14 @@
 package com.kotlin.olena.tvshowsapp.screens.show.detail
 
-
-import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
-import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
+import androidx.lifecycle.ViewModelProvider
 import com.kotlin.olena.tvshowsapp.GlideApp
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.base.BaseFragment
-import com.kotlin.olena.tvshowsapp.base.BaseViewModel
 import com.kotlin.olena.tvshowsapp.data.models.ShowDetails
 import com.kotlin.olena.tvshowsapp.data.networking.Resource
 import com.kotlin.olena.tvshowsapp.data.networking.Status
@@ -30,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_show_detail.*
 class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
 
     override fun provideViewModel(): ShowDetailViewModel {
-        return ViewModelProviders.of(this, activity?.injector?.getShowDetailViewModelFactory())
+        return ViewModelProvider(this, activity?.injector?.getShowDetailViewModelFactory() as ViewModelProvider.Factory)
                 .get(ShowDetailViewModel::class.java)
     }
 

@@ -2,6 +2,7 @@ package com.kotlin.olena.tvshowsapp.di
 
 import android.app.Application
 import android.content.Context
+import androidx.lifecycle.ViewModelProvider
 import com.kotlin.olena.tvshowsapp.screens.prelogin.login.LoginViewModel
 import com.kotlin.olena.tvshowsapp.screens.prelogin.registration.RegistrationViewModel
 import com.kotlin.olena.tvshowsapp.screens.show.detail.ShowDetailViewModel

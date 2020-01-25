@@ -5,17 +5,14 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.base.BaseFragment
-import com.kotlin.olena.tvshowsapp.data.models.ImageModel
 import com.kotlin.olena.tvshowsapp.screens.show.list.rv.OnShowClickedListener
 import com.kotlin.olena.tvshowsapp.data.models.Show
 import com.kotlin.olena.tvshowsapp.data.networking.Resource
@@ -25,13 +22,12 @@ import com.kotlin.olena.tvshowsapp.other.replaceFragment
 import com.kotlin.olena.tvshowsapp.screens.prelogin.login.LoginFragment
 import com.kotlin.olena.tvshowsapp.screens.show.detail.ShowDetailFragment
 import com.kotlin.olena.tvshowsapp.screens.show.list.rv.ShowsAdapter
-import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_shows_list.*
 
 class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener, NavigationView.OnNavigationItemSelectedListener {
 
     override fun provideViewModel(): ShowsViewModel {
-        return ViewModelProviders.of(this, activity?.injector?.getShowsViewModelFactory())
+        return ViewModelProvider(this, activity?.injector?.getShowsViewModelFactory() as ViewModelProvider.Factory)
                 .get(ShowsViewModel::class.java)
     }
 
@@ -70,7 +66,7 @@ class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener,
     }
 
     private fun initSearch(){
-        appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+        appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             floatingSearchView.translationY = verticalOffset.toFloat() })
         floatingSearchView.setOnQueryChangeListener { _, newQuery ->
             viewModel.onSearchInputChanged(newQuery)
