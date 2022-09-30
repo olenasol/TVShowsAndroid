@@ -1,10 +1,7 @@
 package com.kotlin.olena.tvshowsapp.screens.show.list
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,21 +21,15 @@ import com.kotlin.olena.tvshowsapp.screens.show.detail.ShowDetailFragment
 import com.kotlin.olena.tvshowsapp.screens.show.list.rv.ShowsAdapter
 import kotlinx.android.synthetic.main.fragment_shows_list.*
 
-class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener, NavigationView.OnNavigationItemSelectedListener {
+class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener {
 
     override fun provideViewModel(): ShowsViewModel {
         return ViewModelProvider(this, activity?.injector?.getShowsViewModelFactory() as ViewModelProvider.Factory)
                 .get(ShowsViewModel::class.java)
     }
 
-    companion object {
-        fun newInstance(): ShowsListFragment {
-            return ShowsListFragment()
-        }
-    }
-
     //region Observers
-    val listOfShowsObserver =
+    private val listOfShowsObserver =
             Observer<Resource<List<Show>>> { resource ->
                 if (resource != null) {
                     if (resource.status == Status.ERROR) {
@@ -59,18 +50,27 @@ class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainToolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.item_logout -> {
+                    FirebaseAuth.getInstance().signOut()
+                    replaceFragment(LoginFragment.newInstance(),R.id.main_container)
+                }
+            }
+            return@setOnMenuItemClickListener true
+        }
         observeViewModel()
         initShowsResView()
         initSearch()
-        navigationView.setNavigationItemSelectedListener(this)
+        //navigationView.setNavigationItemSelectedListener(this)
     }
 
     private fun initSearch(){
-        appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            floatingSearchView.translationY = verticalOffset.toFloat() })
-        floatingSearchView.setOnQueryChangeListener { _, newQuery ->
-            viewModel.onSearchInputChanged(newQuery)
-        }
+//        appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+//            floatingSearchView.translationY = verticalOffset.toFloat() })
+//        floatingSearchView.setOnQueryChangeListener { _, newQuery ->
+//            viewModel.onSearchInputChanged(newQuery)
+//        }
     }
 
     /**
@@ -121,13 +121,20 @@ class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener,
         viewModel.listOfShows.observe(this.viewLifecycleOwner, listOfShowsObserver)
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.nav_logout -> {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.item_logout -> {
                 FirebaseAuth.getInstance().signOut()
                 replaceFragment(LoginFragment.newInstance(),R.id.main_container)
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
-        return true
+    }
+
+    companion object {
+        fun newInstance(): ShowsListFragment {
+            return ShowsListFragment()
+        }
     }
 }

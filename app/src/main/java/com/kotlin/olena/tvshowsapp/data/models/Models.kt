@@ -5,7 +5,6 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
@@ -16,13 +15,10 @@ data class Show(@PrimaryKey(autoGenerate = false)
                 @field:SerializedName("id") var id:Int,
                 @field:SerializedName("name") var name:String,
                 @Embedded@field:SerializedName("image") val image:ImageModel,
-                var isFavourite: Boolean):Parcelable, SearchSuggestion{
+                var isFavourite: Boolean):Parcelable{
 
     constructor():this(0,"",ImageModel(""),false)
 
-    override fun getBody(): String {
-        return name
-    }
 }
 
 @Parcelize
