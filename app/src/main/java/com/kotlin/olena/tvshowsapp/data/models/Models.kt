@@ -26,7 +26,7 @@ data class Show(@PrimaryKey(autoGenerate = false)
 }
 
 @Parcelize
-data class ImageModel(@field:SerializedName("original")val originalImageUrl:String):Parcelable
+data class ImageModel(@field:SerializedName("original")val originalImageUrl:String?):Parcelable
 
 @Entity
 data class ShowDetails(

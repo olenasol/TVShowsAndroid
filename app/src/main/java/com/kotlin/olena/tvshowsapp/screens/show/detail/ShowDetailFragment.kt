@@ -28,7 +28,7 @@ class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
         const val ARG_ID = "arg_id"
         const val ARGS_POSTER = "args_poster"
 
-        fun newInstance(id: Int, poster: String): ShowDetailFragment {
+        fun newInstance(id: Int, poster: String?): ShowDetailFragment {
             val fragment = ShowDetailFragment()
             val bundle =  Bundle()
             bundle.putInt(ARG_ID,id)

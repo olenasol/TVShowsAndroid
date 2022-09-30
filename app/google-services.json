@@ -1,52 +1,44 @@
 {
   "project_info": {
-    "project_number": "988429612794",
-    "firebase_url": "https://tvshowsapp-5dabf.firebaseio.com",
-    "project_id": "tvshowsapp-5dabf",
-    "storage_bucket": "tvshowsapp-5dabf.appspot.com"
+    "project_number": "146734522693",
+    "project_id": "tvshows-f52e1",
+    "storage_bucket": "tvshows-f52e1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:988429612794:android:8dcd1c801c90807b",
+        "mobilesdk_app_id": "1:146734522693:android:40e42bc67ae191bebbde2c",
         "android_client_info": {
           "package_name": "com.kotlin.olena.tvshowsapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "988429612794-i0itghvjhj17q2ke6egsrv9v3508q2f6.apps.googleusercontent.com",
+          "client_id": "146734522693-n5df10ps0na5d0hddprlufj52fbp5bv7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.kotlin.olena.tvshowsapp",
-            "certificate_hash": "eb4bbca94463acff79e163973ab280a6d05e4383"
+            "certificate_hash": "26f46c13ab316cfa94c2f897a66ad47fa877c058"
           }
         },
         {
-          "client_id": "988429612794-c173dn1lbqjmldgdoe1db77akovkneln.apps.googleusercontent.com",
+          "client_id": "146734522693-2vriuv6ed2fcr4slcq4i488ct5pf9qto.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCGjS-NnfG175anqxdKKb2qFloulONoIOI"
+          "current_key": "AIzaSyAcvCS3IUC1b4CCXm7FfW2bgwpJQa99OLo"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "988429612794-c173dn1lbqjmldgdoe1db77akovkneln.apps.googleusercontent.com",
+              "client_id": "146734522693-2vriuv6ed2fcr4slcq4i488ct5pf9qto.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

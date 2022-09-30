@@ -1,12 +1,12 @@
 package com.kotlin.olena.tvshowsapp.base
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import es.dmoral.toasty.Toasty
+import com.google.android.material.snackbar.Snackbar
 
 abstract class BaseFragment<VM : BaseViewModel>() : Fragment() {
     protected lateinit var viewModel: VM
@@ -41,14 +41,20 @@ abstract class BaseFragment<VM : BaseViewModel>() : Fragment() {
     }
 
     protected fun showError(description: String?) {
-        context?.let { context ->
-            Toasty.error(context, description.toString(), Toast.LENGTH_SHORT, true).show()
+        view?.let { view ->
+            Snackbar.make(view, description.toString(), Snackbar.LENGTH_SHORT)
+                .setBackgroundTint(Color.RED)
+                .setTextColor(Color.WHITE)
+                .show()
         }
     }
 
     protected fun showSuccess(text: String) {
-        context?.let { context ->
-            Toasty.success(context, text, Toast.LENGTH_SHORT, true).show()
+        view?.let { view ->
+            Snackbar.make(view, text, Snackbar.LENGTH_SHORT)
+                .setBackgroundTint(Color.GREEN)
+                .setTextColor(Color.WHITE)
+                .show()
         }
     }
 }

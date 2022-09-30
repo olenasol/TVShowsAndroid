@@ -36,12 +36,6 @@ class LoginFragment : PreloginFragment<LoginViewModel>() {
     }
     //endregion
 
-    companion object {
-        fun newInstance(): LoginFragment {
-            return LoginFragment()
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_login, container, false)
@@ -50,6 +44,7 @@ class LoginFragment : PreloginFragment<LoginViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         submitBtn.setOnClickListener {
+            hideKeyboard()
             viewModel.loginEmail(emailEdt.text.toString(), passwordEdt.text.toString())
         }
         registerTxt.setOnClickListener {
@@ -59,5 +54,11 @@ class LoginFragment : PreloginFragment<LoginViewModel>() {
 
     override fun subscribeToObservers() {
         viewModel.getPreLoginState().observe(this.viewLifecycleOwner, loginObserver)
+    }
+
+    companion object {
+        fun newInstance(): LoginFragment {
+            return LoginFragment()
+        }
     }
 }
