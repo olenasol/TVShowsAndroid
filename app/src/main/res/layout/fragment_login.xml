@@ -10,49 +10,68 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="32dp"
-        tools:context=".screens.prelogin.login.LoginFragment">
+        tools:context=".presentation.prelogin.login.LoginFragment">
 
-        <EditText
-            android:id="@+id/emailEdt"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="56dp"
             android:layout_marginBottom="32dp"
             android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            app:errorEnabled="true">
 
-        <EditText
-            android:id="@+id/passwordEdt"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/submitBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:text="@string/login"
+                android:textColor="@android:color/white" />
+            <ProgressBar
+                android:id="@+id/loader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_gravity="center"/>
+        </FrameLayout>
 
         <Button
-            android:id="@+id/submitBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:background="@color/colorPrimary"
-            android:text="@string/login"
-            android:textColor="@android:color/white" />
-
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/google_sign_in_btn"
+            android:id="@+id/btnRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/register"
             android:layout_gravity="center"
-            android:layout_marginBottom="32dp"
-            android:visibility="gone"
-            app:buttonSize="wide" />
-
-        <TextView
-            android:id="@+id/registerTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/register" />
+            android:textSize="18sp"
+            android:layout_marginTop="12dp"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
 
     </LinearLayout>
 </ScrollView>

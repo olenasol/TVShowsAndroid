@@ -7,6 +7,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.kotlin.olena.tvshowsapp.presentation.main.MainActivity
 
 abstract class BaseFragment<VM : BaseViewModel>() : Fragment() {
     protected lateinit var viewModel: VM

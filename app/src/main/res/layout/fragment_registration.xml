@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="32dp"
-        tools:context=".screens.prelogin.registration.RegistrationFragment">
+        tools:context=".presentation.prelogin.registration.RegistrationFragment">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputEmail"

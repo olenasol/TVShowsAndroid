@@ -1,12 +1,11 @@
 package com.kotlin.olena.tvshowsapp.di
 
 import android.app.Application
-import android.content.Context
-import androidx.lifecycle.ViewModelProvider
-import com.kotlin.olena.tvshowsapp.screens.prelogin.login.LoginViewModel
-import com.kotlin.olena.tvshowsapp.screens.prelogin.registration.RegistrationViewModel
-import com.kotlin.olena.tvshowsapp.screens.show.detail.ShowDetailViewModel
-import com.kotlin.olena.tvshowsapp.screens.show.list.ShowsViewModel
+import com.kotlin.olena.tvshowsapp.presentation.main.MainViewModel
+import com.kotlin.olena.tvshowsapp.presentation.prelogin.login.LoginViewModel
+import com.kotlin.olena.tvshowsapp.presentation.prelogin.registration.RegistrationViewModel
+import com.kotlin.olena.tvshowsapp.presentation.show.detail.ShowDetailViewModel
+import com.kotlin.olena.tvshowsapp.presentation.show.list.ShowsViewModel
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -35,4 +34,6 @@ interface ApplicationComponent {
     fun getShowsViewModelFactory():ViewModelFactory<ShowsViewModel>
 
     fun getShowDetailViewModelFactory():ViewModelFactory<ShowDetailViewModel>
+
+    fun getMainViewModelFactory(): ViewModelFactory<MainViewModel>
 }
