@@ -5,8 +5,6 @@ import android.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.base.BaseFragment

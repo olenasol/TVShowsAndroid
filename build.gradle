@@ -12,6 +12,7 @@ buildscript {
                 retrofitConverter: '2.3.0',
                 dagger: '2.42',
                 glide: '4.12.0',
+                coroutines: '1.6.0',
                 firebase: [
                         auth: '21.0.8'
                 ],

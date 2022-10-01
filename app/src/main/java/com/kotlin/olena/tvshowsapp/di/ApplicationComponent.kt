@@ -16,7 +16,7 @@ import javax.inject.Singleton
  * simple (even though it doesn't look that bad either) and it doesn't get much better than that.
  */
 @Singleton
-@Component(modules = [AppModule::class])
+@Component(modules = [AppModule::class, RepositoryModule::class, UseCaseModule::class])
 interface ApplicationComponent {
 
     @Component.Builder

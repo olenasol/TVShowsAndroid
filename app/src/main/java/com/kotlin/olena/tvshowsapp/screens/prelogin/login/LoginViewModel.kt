@@ -27,7 +27,7 @@ class LoginViewModel @Inject constructor(application: Application) : PreloginVie
 
         } else {
             preloginState.postValue(Resource(Status.ERROR,message = getApplication<TVShowsApplication>()
-                    .applicationContext.getString(R.string.enter_data)))
+                    .applicationContext.getString(R.string.empty_input)))
         }
     }
 }

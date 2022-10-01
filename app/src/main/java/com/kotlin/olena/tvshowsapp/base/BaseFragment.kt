@@ -20,14 +20,14 @@ abstract class BaseFragment<VM : BaseViewModel>() : Fragment() {
 
     protected fun hideKeyboard() {
         val view = activity?.currentFocus
-        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view?.windowToken, 0)
+        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        imm?.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
     protected fun showKeyboard(view: View) {
         if (view.requestFocus()) {
             val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-            imm!!.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+            imm?.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 

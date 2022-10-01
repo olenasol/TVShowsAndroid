@@ -1,9 +1,12 @@
 package com.kotlin.olena.tvshowsapp.other
 
+import android.app.Activity
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.snackbar.Snackbar
 import com.kotlin.olena.tvshowsapp.R
 
 
@@ -32,4 +35,22 @@ fun FragmentTransaction.replaceWithAnimation(frameId: Int, fragment: Fragment): 
 
 fun Fragment.replaceFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = false) {
     (activity as AppCompatActivity).replaceFragment(fragment, frameId, addToBackStack)
+}
+
+fun Fragment.showSuccessSnackBar(text: String) {
+    view?.let { view ->
+        Snackbar.make(view, text, Snackbar.LENGTH_SHORT)
+            .setBackgroundTint(Color.YELLOW)
+            .setTextColor(Color.BLACK)
+            .show()
+    }
+}
+
+fun Fragment.showErrorSnackBar(text: String) {
+    view?.let { view ->
+        Snackbar.make(view, text, Snackbar.LENGTH_SHORT)
+            .setBackgroundTint(Color.RED)
+            .setTextColor(Color.WHITE)
+            .show()
+    }
 }

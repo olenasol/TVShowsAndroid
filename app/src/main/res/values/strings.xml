@@ -11,11 +11,15 @@
     <string name="logout">Logout</string>
     <string name="auth_failed">Authentication failed.</string>
     <string name="register_failed">Registration failed</string>
-    <string name="enter_data">Please enter needed data</string>
-    <string name="passwords_different">Passwords are not the same</string>
     <string name="registered_successfully">Registered successfully</string>
     <string name="rating">Rating: %.02f</string>
     <string name="status">Status: %s</string>
     <string name="language">Language: %s</string>
     <string name="officialSite">Official site: %s</string>
+
+    <string name="empty_input">Empty input</string>
+    <string name="incorrect_email_format">Incorrect email format</string>
+    <string name="password_too_short">Password should contain at least %d characters</string>
+    <string name="passwords_do_not_match">Input should be the same as password field</string>
+    <string name="success">Success</string>
 </resources>

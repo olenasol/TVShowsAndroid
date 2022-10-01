@@ -12,13 +12,14 @@ open class PreloginViewModel(application: Application) : BaseViewModel(applicati
 
     fun getPreLoginState() = preloginState as LiveData<Resource<Void>?>
 
-    protected fun isInputValid(email: String, password: String,passwordConfirm: String?=null):Boolean{
-        val isPasswordEmailValid = email.isNotBlank() && password.isNotBlank()
+    protected fun isInputValid(email: String?, password: String?,passwordConfirm: String?=null) : Boolean {
+        val isPasswordEmailValid = (email?.isNotBlank() ?:false) && (password?.isNotBlank() ?: false)
         if (passwordConfirm != null){
             return isPasswordEmailValid && passwordConfirm.isNotBlank()
         }
         return isPasswordEmailValid
     }
+
     fun clearData(){
         preloginState.value = null
     }

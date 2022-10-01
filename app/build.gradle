@@ -25,7 +25,9 @@ android {
             excludes += ['META-INF/proguard/androidx-annotations.pro']
         }
     }
-
+    buildFeatures {
+        viewBinding true
+    }
     androidExtensions {
         experimental = true
     }
@@ -45,9 +47,14 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$versions.androidX.constraintLayout"
     //Architecture Components
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.androidX.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$versions.androidX.lifecycle"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation "androidx.room:room-runtime:$versions.androidX.room"
     kapt "androidx.room:room-compiler:$versions.androidX.room"
     implementation "androidx.room:room-ktx:$versions.androidX.room"
+    //Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$versions.retrofitConverter"

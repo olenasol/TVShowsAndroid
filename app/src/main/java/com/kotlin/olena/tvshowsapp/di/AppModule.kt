@@ -1,9 +1,11 @@
 package com.kotlin.olena.tvshowsapp.di
 
 import android.app.Application
+import com.google.firebase.auth.FirebaseAuth
 import com.kotlin.olena.tvshowsapp.data.db.AppDatabase
 import com.kotlin.olena.tvshowsapp.data.networking.ApiInterface
 import com.kotlin.olena.tvshowsapp.data.networking.LiveDataCallAdapterFactory
+import com.kotlin.olena.tvshowsapp.other.BASE_URL
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -12,8 +14,6 @@ import javax.inject.Singleton
 
 @Module
 class AppModule {
-
-    private val BASE_URL = "http://api.tvmaze.com"
 
     @Provides
     @Singleton
@@ -29,5 +29,9 @@ class AppModule {
     fun provideDatabase(application: Application): AppDatabase {
         return AppDatabase.getDatabase(application)
     }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth() = FirebaseAuth.getInstance()
 
 }
