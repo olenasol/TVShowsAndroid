@@ -2,72 +2,50 @@ package com.kotlin.olena.tvshowsapp.presentation.show.list
 
 import android.os.Bundle
 import android.view.*
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.kotlin.olena.tvshowsapp.R
-import com.kotlin.olena.tvshowsapp.base.BaseFragment
 import com.kotlin.olena.tvshowsapp.presentation.show.list.rv.OnShowClickedListener
-import com.kotlin.olena.tvshowsapp.data.models.Show
-import com.kotlin.olena.tvshowsapp.data.networking.Resource
-import com.kotlin.olena.tvshowsapp.data.networking.Status
+import com.kotlin.olena.tvshowsapp.databinding.FragmentShowsListBinding
 import com.kotlin.olena.tvshowsapp.di.injector
 import com.kotlin.olena.tvshowsapp.other.replaceFragment
 import com.kotlin.olena.tvshowsapp.presentation.prelogin.login.LoginFragment
 import com.kotlin.olena.tvshowsapp.presentation.show.detail.ShowDetailFragment
 import com.kotlin.olena.tvshowsapp.presentation.show.list.rv.ShowsAdapter
 import kotlinx.android.synthetic.main.fragment_shows_list.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
-class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener {
+class ShowsListFragment : Fragment(R.layout.fragment_shows_list), OnShowClickedListener {
 
-    override fun provideViewModel(): ShowsViewModel {
-        return ViewModelProvider(this, activity?.injector?.getShowsViewModelFactory() as ViewModelProvider.Factory)[ShowsViewModel::class.java]
-    }
+    lateinit var viewModel: ShowsViewModel
+    private val adapter = ShowsAdapter(this)
 
-    //region Observers
-    private val listOfShowsObserver =
-            Observer<Resource<List<Show>>> { resource ->
-                if (resource != null) {
-                    if (resource.status == Status.ERROR) {
-                        error(resource.message.toString())
-                    } else {
-                        if (resource.data != null) {
-                            (showsRecyclerView.adapter as ShowsAdapter).setShowsList(resource.data)
-                        }
-                    }
-                }
-            }
+    private var _binding: FragmentShowsListBinding? = null
 
-    //endregion
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_shows_list, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this, activity?.injector?.getShowsViewModelFactory() as ViewModelProvider.Factory)[ShowsViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainToolbar.setOnMenuItemClickListener { item ->
+        _binding = FragmentShowsListBinding.bind(view)
+        _binding?.mainToolbar?.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.item_logout -> {
-                    FirebaseAuth.getInstance().signOut()
+                    viewModel.logout()
                     replaceFragment(LoginFragment.newInstance(),R.id.main_container)
                 }
             }
             return@setOnMenuItemClickListener true
         }
-        observeViewModel()
         initShowsResView()
-        initSearch()
-        //navigationView.setNavigationItemSelectedListener(this)
-    }
-
-    private fun initSearch(){
-//        appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-//            floatingSearchView.translationY = verticalOffset.toFloat() })
-//        floatingSearchView.setOnQueryChangeListener { _, newQuery ->
-//            viewModel.onSearchInputChanged(newQuery)
-//        }
+        observeViewModel()
     }
 
     /**
@@ -76,55 +54,44 @@ class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener 
      * on Huawei Y7 (problem with reference in spanSizeLookup)
      */
     private fun initShowsResView() {
-        val adapter = ShowsAdapter(this)
         showsRecyclerView.adapter = adapter
         val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 2)
-
-        gridLayoutManager.spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (adapter.getItemViewType(position) == ShowsAdapter.VIEW_SHOW) {
-                    1
-                } else {
-                    2
-                }
-            }
-        }
         showsRecyclerView.layoutManager = gridLayoutManager
-        showsRecyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val linearLayoutManager:LinearLayoutManager = (recyclerView.layoutManager as LinearLayoutManager)
-                val totalItem: Int = linearLayoutManager.itemCount
-                val lastVisibleItem: Int = linearLayoutManager.findLastCompletelyVisibleItemPosition()
-                if (totalItem <= lastVisibleItem + 1 && (showsRecyclerView.adapter as ShowsAdapter).listOfShows[lastVisibleItem] == null) {
-                    viewModel.fetchNextPage()
-                }
-            }
-        })
-
     }
 
-    override fun onShowClicked(position: Int, show: Show) {
-        val fragment: ShowDetailFragment = ShowDetailFragment.newInstance(show.id, show.image.originalImageUrl)
+    override fun onShowClicked(showId: Int) {
+        val fragment: ShowDetailFragment = ShowDetailFragment.newInstance(showId, "")
         replaceFragment(fragment, R.id.main_container,true)
     }
 
-    override fun onFavouriteClicked(position: Int) {
-        viewModel.setShowToFavourite(position)
-    }
-
-
     private fun observeViewModel() {
-        viewModel.listOfShows.observe(this.viewLifecycleOwner, listOfShowsObserver)
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.screenState.onEach { screenState ->
+                    updateScreenState(screenState)
+                }.launchIn(this)
+            }
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.item_logout -> {
-                viewModel.logout()
-                true
+    private fun updateScreenState(screenState: ShowsViewModel.ScreenState) {
+        when(screenState) {
+            is ShowsViewModel.ScreenState.Loading ->{
+                _binding?.progressBar?.visibility = View.VISIBLE
+                _binding?.showsRecyclerView?.visibility = View.GONE
+                _binding?.txtError?.visibility = View.GONE
             }
-            else -> super.onOptionsItemSelected(item)
+            is ShowsViewModel.ScreenState.Error -> {
+                _binding?.progressBar?.visibility = View.GONE
+                _binding?.showsRecyclerView?.visibility = View.GONE
+                _binding?.txtError?.visibility = View.VISIBLE
+            }
+            is ShowsViewModel.ScreenState.Success -> {
+                _binding?.progressBar?.visibility = View.GONE
+                _binding?.showsRecyclerView?.visibility = View.VISIBLE
+                _binding?.txtError?.visibility = View.GONE
+                adapter.submitList(screenState.list)
+            }
         }
     }
 

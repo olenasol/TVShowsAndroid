@@ -22,4 +22,5 @@
     <string name="password_too_short">Password should contain at least %d characters</string>
     <string name="passwords_do_not_match">Input should be the same as password field</string>
     <string name="success">Success</string>
+    <string name="try_again_later">Something went wrong.\n Please, try again later.</string>
 </resources>

@@ -1,97 +1,70 @@
 package com.kotlin.olena.tvshowsapp.presentation.show.list.rv
 
-import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.kotlin.olena.tvshowsapp.GlideApp
 import com.kotlin.olena.tvshowsapp.R
-import com.kotlin.olena.tvshowsapp.presentation.show.list.rv.ShowListDiffCallback.Companion.ARGS_FAVOURITE
-import com.kotlin.olena.tvshowsapp.data.models.Show
-import kotlinx.android.synthetic.main.item_show.view.*
+import androidx.recyclerview.widget.RecyclerView
+import com.kotlin.olena.tvshowsapp.domain.models.ShowGeneralInfo
 
-class ShowsAdapter(private val listener: OnShowClickedListener) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
+class ShowsAdapter(private val listener: OnShowClickedListener) :
+    ListAdapter<ShowGeneralInfo, ShowsAdapter.ShowHolder>(DiffItemCallback()) {
 
-    companion object {
-        const val VIEW_SHOW: Int = 0
-        const val VIEW_PROGRESS: Int = 1
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowHolder {
+        return ShowHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_show, parent, false)
+        )
     }
 
-    var listOfShows: MutableList<Show?> = mutableListOf()
-    lateinit var context:Context
+    override fun onBindViewHolder(holder: ShowHolder, position: Int) {
+        holder.setShowImage(getItem(position).imageUrl)
+        holder.setFavouriteButtonState(getItem(position).isFavourite)
+        holder.itemView.setOnClickListener {
+            listener.onShowClicked(getItem(holder.bindingAdapterPosition).id)
+        }
+    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
-        context = parent.context
-        return if (viewType == VIEW_SHOW) {
-            ShowsHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_show, parent, false))
+    override fun onBindViewHolder(holder: ShowHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
         } else {
-            ProgressHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_progress, parent, false))
-        }
-    }
-
-    override fun getItemCount(): Int {
-        return listOfShows.size
-    }
-
-    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-        if (holder is ShowsHolder) {
-            GlideApp.with(context).load(listOfShows[position]?.image?.originalImageUrl)
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
-                    .into(holder.showImageView)
-            if (listOfShows[position]?.isFavourite!!) {
-                holder.favouriteBtn.setImageResource(R.drawable.ic_star_full)
-            } else {
-                holder.favouriteBtn.setImageResource(R.drawable.ic_star_border)
-            }
-            holder.itemView.setOnClickListener {
-                listener.onShowClicked(holder.adapterPosition, listOfShows[holder.adapterPosition]!!)
-            }
-            holder.favouriteBtn.setOnClickListener {
-                listener.onFavouriteClicked(holder.adapterPosition)
+            if (payloads[0] == true) {
+                holder.setFavouriteButtonState(getItem(position).isFavourite)
             }
         }
     }
 
-    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
-        if (holder is ShowsHolder)
-            if (!payloads.isEmpty()) {
-                val payload: Bundle = payloads[0] as Bundle
-                if (payload.getBoolean(ARGS_FAVOURITE))
-                    holder.favouriteBtn.setImageResource(R.drawable.ic_star_full)
-                else
-                    holder.favouriteBtn.setImageResource(R.drawable.ic_star_border)
-            }
-        super.onBindViewHolder(holder, position, payloads)
+    class ShowHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val showImageView = itemView.findViewById<ImageView>(R.id.showImageView)
+        private val favouriteView = itemView.findViewById<ImageView>(R.id.favouriteView)
+
+        fun setShowImage(imageUrl: String?) {
+            GlideApp.with(itemView.context).load(imageUrl)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .into(showImageView)
+        }
+
+        fun setFavouriteButtonState(isFavourite: Boolean) {
+            favouriteView.setImageResource(if (isFavourite) R.drawable.ic_star_full else R.drawable.ic_star_border)
+        }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return if (position < itemCount) {
-            if (listOfShows[position] == null) {
-                VIEW_PROGRESS
-            } else {
-                VIEW_SHOW
-            }
-        } else
-            VIEW_PROGRESS
+    class DiffItemCallback : DiffUtil.ItemCallback<ShowGeneralInfo>() {
+        override fun areItemsTheSame(oldItem: ShowGeneralInfo, newItem: ShowGeneralInfo): Boolean =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(
+            oldItem: ShowGeneralInfo,
+            newItem: ShowGeneralInfo
+        ): Boolean = oldItem == newItem
+
+        override fun getChangePayload(oldItem: ShowGeneralInfo, newItem: ShowGeneralInfo): Any? {
+            return if (oldItem.isFavourite != newItem.isFavourite) true else null
+        }
     }
-
-    fun setShowsList(list: List<Show>) {
-        val tempList: MutableList<Show?> = list.toMutableList()
-        tempList.add(null)
-        val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(
-                ShowListDiffCallback(listOfShows, tempList))
-        diffResult.dispatchUpdatesTo(this)
-        this.listOfShows = tempList
-    }
-
-
-    class ShowsHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-        val showImageView = itemView.showImageView!!
-        val favouriteBtn = itemView.favouriteBtn!!
-    }
-
-    class ProgressHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView)
 }

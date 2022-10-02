@@ -9,14 +9,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.kotlin.olena.tvshowsapp.GlideApp
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.base.BaseFragment
-import com.kotlin.olena.tvshowsapp.data.models.ShowDetails
-import com.kotlin.olena.tvshowsapp.data.networking.Resource
-import com.kotlin.olena.tvshowsapp.data.networking.Status
 import com.kotlin.olena.tvshowsapp.di.injector
 import kotlinx.android.synthetic.main.fragment_show_detail.*
 
 
 class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
+
+
 
     override fun provideViewModel(): ShowDetailViewModel {
         return ViewModelProvider(this, activity?.injector?.getShowDetailViewModelFactory() as ViewModelProvider.Factory)
@@ -39,28 +38,28 @@ class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
     }
 
     //region Observers
-    val showDetailsObserver = Observer<Resource<ShowDetails>> { resource ->
-                if (resource != null) {
-                    when(resource.status){
-                        Status.LOADING->{
-                            showLoading()
-                        }
-                        Status.SUCCESS ->{
-                            hideLoading()
-                            if(resource.data != null) {
-                                txtName.text = resource.data.name
-                                txtRating.text = getString(R.string.rating,resource.data.rating?.rating)
-                                txtLanguage.text = getString(R.string.language,resource.data.language)
-                                txtStatus.text = getString(R.string.status,resource.data.status)
-                            }
-                        }
-                        Status.ERROR->{
-                            hideLoading()
-                            error(resource.message.toString())
-                        }
-                    }
-                }
-            }
+//    val showDetailsObserver = Observer<Resource<ShowDetails>> { resource ->
+//                if (resource != null) {
+//                    when(resource.status){
+//                        Status.LOADING->{
+//                            showLoading()
+//                        }
+//                        Status.SUCCESS ->{
+//                            hideLoading()
+//                            if(resource.data != null) {
+//                                txtName.text = resource.data.name
+//                                txtRating.text = getString(R.string.rating,resource.data.rating?.rating)
+//                                txtLanguage.text = getString(R.string.language,resource.data.language)
+//                                txtStatus.text = getString(R.string.status,resource.data.status)
+//                            }
+//                        }
+//                        Status.ERROR->{
+//                            hideLoading()
+//                            error(resource.message.toString())
+//                        }
+//                    }
+//                }
+//            }
 
     //endregion
 
@@ -70,28 +69,28 @@ class ShowDetailFragment : BaseFragment<ShowDetailViewModel>() {
         return inflater.inflate(R.layout.fragment_show_detail, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        context?.let { context ->
-            GlideApp.with(context).load(arguments?.getString(ARGS_POSTER))
-                    .into(posterImgView)
-        }
-        viewModel.loadDetails(arguments?.getInt(ARG_ID))
-        subscribeToObservers()
-    }
-
-    private fun subscribeToObservers() {
-        viewModel.getShowDetails().observe(this.viewLifecycleOwner,showDetailsObserver)
-    }
-
-    override fun showLoading(){
-        loader.visibility = View.VISIBLE
-        detailsLayout.visibility = View.GONE
-    }
-
-    override fun hideLoading() {
-        loader.visibility = View.GONE
-        detailsLayout.visibility = View.VISIBLE
-    }
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        context?.let { context ->
+//            GlideApp.with(context).load(arguments?.getString(ARGS_POSTER))
+//                    .into(posterImgView)
+//        }
+//        viewModel.loadDetails(arguments?.getInt(ARG_ID))
+//        subscribeToObservers()
+//    }
+//
+//    private fun subscribeToObservers() {
+//        viewModel.getShowDetails().observe(this.viewLifecycleOwner,showDetailsObserver)
+//    }
+//
+//    override fun showLoading(){
+//        loader.visibility = View.VISIBLE
+//        detailsLayout.visibility = View.GONE
+//    }
+//
+//    override fun hideLoading() {
+//        loader.visibility = View.GONE
+//        detailsLayout.visibility = View.VISIBLE
+//    }
 
 }

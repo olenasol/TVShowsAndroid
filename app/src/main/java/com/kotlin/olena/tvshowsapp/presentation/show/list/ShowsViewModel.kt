@@ -1,45 +1,43 @@
 package com.kotlin.olena.tvshowsapp.presentation.show.list
 
-import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import com.kotlin.olena.tvshowsapp.base.BaseViewModel
-import com.kotlin.olena.tvshowsapp.data.models.Show
-import com.kotlin.olena.tvshowsapp.data.networking.Resource
+import android.util.Log
+import androidx.lifecycle.*
+import com.kotlin.olena.tvshowsapp.domain.models.ShowGeneralInfo
+import com.kotlin.olena.tvshowsapp.domain.usecase.GetShowListUseCase
 import com.kotlin.olena.tvshowsapp.domain.usecase.LogoutUseCase
+import com.kotlin.olena.tvshowsapp.other.DispatcherProvider
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ShowsViewModel @Inject constructor(application: Application,
-                                         private val logoutUseCase: LogoutUseCase,
-                                         repo: ShowsRepository) : BaseViewModel(application) {
+class ShowsViewModel @Inject constructor(
+    private val logoutUseCase: LogoutUseCase,
+    private val listOfShowsUseCase: GetShowListUseCase,
+    private val dispatcherProvider: DispatcherProvider
+) : ViewModel() {
 
-    private val page: MutableLiveData<Int> = MutableLiveData()
-    private val listShowsFromPage: LiveData<Resource<List<Show>>> = Transformations
-            .switchMap(page) { input ->
-                repo.getShowsFromServer(input)
-            }
-    val listOfShows = MediatorLiveData<Resource<List<Show>>>()
+    private val _screenState = MutableStateFlow<ScreenState>(ScreenState.Loading)
+    val screenState = _screenState.asStateFlow()
 
     init {
-        page.postValue(0)
-        listOfShows.addSource(listShowsFromPage) { result: Resource<List<Show>> ->
-            var fullList = listOfShows.value?.data?.toMutableList()
-            result.data?.let {
-                if (fullList == null) {
-                    fullList = it.toMutableList()
-                } else {
-                    fullList?.addAll(it)
-                }
-            }
-            listOfShows.postValue(Resource<List<Show>>(result.status, fullList, result.message))
-        }
+        loadListOfShows()
     }
 
-    fun fetchNextPage() {
-        page.value?.let {
-            page.postValue(it + 1)
+     private fun loadListOfShows() {
+        viewModelScope.launch(dispatcherProvider.io()) {
+            listOfShowsUseCase.invoke().collect { list ->
+                withContext(dispatcherProvider.main()) {
+                    _screenState.emit(
+                        if (list.isEmpty())
+                            ScreenState.Error
+                        else ScreenState.Success(list)
+                    )
+                }
+            }
         }
     }
 
@@ -47,12 +45,9 @@ class ShowsViewModel @Inject constructor(application: Application,
         logoutUseCase.logout()
     }
 
-
-    fun setShowToFavourite(pos: Int) {
-
-    }
-
-    fun onSearchInputChanged(newQuery: String?) {
-
+    sealed class ScreenState {
+        object Loading: ScreenState()
+        class Success(val list: List<ShowGeneralInfo>): ScreenState()
+        object Error: ScreenState()
     }
 }
