@@ -22,8 +22,7 @@ import kotlinx.android.synthetic.main.fragment_shows_list.*
 class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener {
 
     override fun provideViewModel(): ShowsViewModel {
-        return ViewModelProvider(this, activity?.injector?.getShowsViewModelFactory() as ViewModelProvider.Factory)
-                .get(ShowsViewModel::class.java)
+        return ViewModelProvider(this, activity?.injector?.getShowsViewModelFactory() as ViewModelProvider.Factory)[ShowsViewModel::class.java]
     }
 
     //region Observers
@@ -122,8 +121,7 @@ class ShowsListFragment : BaseFragment<ShowsViewModel>(), OnShowClickedListener 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.item_logout -> {
-                FirebaseAuth.getInstance().signOut()
-                replaceFragment(LoginFragment.newInstance(),R.id.main_container)
+                viewModel.logout()
                 true
             }
             else -> super.onOptionsItemSelected(item)

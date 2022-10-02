@@ -10,4 +10,6 @@ interface LoginRepository {
     suspend fun login(email: String, password: String): Task<AuthResult>
 
     fun authStateFlow(): Flow<Boolean>
+
+    fun logout()
 }

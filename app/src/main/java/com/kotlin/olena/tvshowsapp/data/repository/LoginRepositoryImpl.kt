@@ -13,6 +13,7 @@ import kotlin.coroutines.suspendCoroutine
 
 
 class LoginRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseAuth): LoginRepository {
+
     override suspend fun register(email: String, password: String): Task<AuthResult> {
         return suspendCoroutine { continuation ->
             firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {result ->
@@ -41,4 +42,10 @@ class LoginRepositoryImpl @Inject constructor(private val firebaseAuth: Firebase
             firebaseAuth.removeAuthStateListener(listener)
         }
     }
+
+    override fun logout() {
+        firebaseAuth.signOut()
+    }
+
+
 }

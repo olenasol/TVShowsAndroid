@@ -8,9 +8,12 @@ import androidx.lifecycle.Transformations
 import com.kotlin.olena.tvshowsapp.base.BaseViewModel
 import com.kotlin.olena.tvshowsapp.data.models.Show
 import com.kotlin.olena.tvshowsapp.data.networking.Resource
+import com.kotlin.olena.tvshowsapp.domain.usecase.LogoutUseCase
 import javax.inject.Inject
 
-class ShowsViewModel @Inject constructor(application: Application, repo: ShowsRepository) : BaseViewModel(application) {
+class ShowsViewModel @Inject constructor(application: Application,
+                                         private val logoutUseCase: LogoutUseCase,
+                                         repo: ShowsRepository) : BaseViewModel(application) {
 
     private val page: MutableLiveData<Int> = MutableLiveData()
     private val listShowsFromPage: LiveData<Resource<List<Show>>> = Transformations
@@ -38,6 +41,10 @@ class ShowsViewModel @Inject constructor(application: Application, repo: ShowsRe
         page.value?.let {
             page.postValue(it + 1)
         }
+    }
+
+    fun logout() {
+        logoutUseCase.logout()
     }
 
 
