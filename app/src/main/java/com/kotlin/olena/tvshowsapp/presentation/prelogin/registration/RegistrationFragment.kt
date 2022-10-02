@@ -72,7 +72,6 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
             }
             is FirebaseAuthState.Success -> {
                 showSuccessSnackBar(getString(R.string.success))
-                parentFragmentManager.popBackStack()
             }
             is FirebaseAuthState.Error -> {
                 _binding?.submitBtn?.visibility = View.VISIBLE

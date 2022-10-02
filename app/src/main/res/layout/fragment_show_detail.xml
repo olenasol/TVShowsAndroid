@@ -6,16 +6,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.show.detail.ShowDetailFragment">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
+
     <ImageView
         android:id="@+id/posterImgView"
         android:contentDescription="@string/show_poster"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
         android:foreground="@drawable/bg_gradient_bottom"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/guideline" />
 
     <ProgressBar
         android:id="@+id/loader"
@@ -35,7 +42,7 @@
         android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/posterImgView"
+        app:layout_constraintTop_toBottomOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <TextView
