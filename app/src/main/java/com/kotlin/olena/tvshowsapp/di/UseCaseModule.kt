@@ -31,4 +31,9 @@ abstract class UseCaseModule {
     abstract fun bindGetShowListUseCase(
         userCase: GetShowListUseCaseImpl
     ): GetShowListUseCase
+
+    @Binds
+    abstract fun bindGetShowById(
+        useCase: GetShowByIdImpl
+    ): GetShowById
 }

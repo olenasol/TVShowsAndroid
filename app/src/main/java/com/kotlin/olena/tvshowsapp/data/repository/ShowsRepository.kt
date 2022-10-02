@@ -29,6 +29,10 @@ class ShowsRepositoryImpl @Inject constructor(private val dao: ShowsDao,
         }
     }
 
+    override fun getShowById(id: Int): Show {
+        return dao.getShowById(id)
+    }
+
     private suspend fun retrieveShowsFromApi() = suspendCoroutine<List<ShowApiModel>> { continuation ->
         api.getShows().enqueue(object : retrofit2.Callback<List<ShowApiModel>> {
             override fun onResponse(

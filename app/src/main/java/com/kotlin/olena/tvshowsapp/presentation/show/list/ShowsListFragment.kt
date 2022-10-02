@@ -3,6 +3,7 @@ package com.kotlin.olena.tvshowsapp.presentation.show.list
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -22,15 +23,12 @@ import kotlinx.coroutines.launch
 
 class ShowsListFragment : Fragment(R.layout.fragment_shows_list), OnShowClickedListener {
 
-    lateinit var viewModel: ShowsViewModel
+    private val viewModel: ShowsViewModel by viewModels {
+        activity?.injector?.getShowsViewModelFactory() as ViewModelProvider.Factory
+    }
     private val adapter = ShowsAdapter(this)
 
     private var _binding: FragmentShowsListBinding? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, activity?.injector?.getShowsViewModelFactory() as ViewModelProvider.Factory)[ShowsViewModel::class.java]
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,6 +46,11 @@ class ShowsListFragment : Fragment(R.layout.fragment_shows_list), OnShowClickedL
         observeViewModel()
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     /**
      * need to have adapter as separate variable due to bug
      * E/RecyclerView: No adapter attached; skipping layout
@@ -60,7 +63,7 @@ class ShowsListFragment : Fragment(R.layout.fragment_shows_list), OnShowClickedL
     }
 
     override fun onShowClicked(showId: Int) {
-        val fragment: ShowDetailFragment = ShowDetailFragment.newInstance(showId, "")
+        val fragment: ShowDetailFragment = ShowDetailFragment.newInstance(showId)
         replaceFragment(fragment, R.id.main_container,true)
     }
 

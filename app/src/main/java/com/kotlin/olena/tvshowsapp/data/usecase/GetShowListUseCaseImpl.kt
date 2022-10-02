@@ -13,6 +13,7 @@ class GetShowListUseCaseImpl @Inject constructor(
     override suspend fun invoke(): Flow<List<ShowGeneralInfo>> {
         return repo.retrieveListOfShows().map { shows ->
             shows.map { show ->
+                //TODO add favourite functionality
                 ShowGeneralInfo(show.id, show.name, show.imageUrl.orEmpty(), false)
             }
         }

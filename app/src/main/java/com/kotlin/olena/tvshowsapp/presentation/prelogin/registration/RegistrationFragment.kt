@@ -4,6 +4,7 @@ package com.kotlin.olena.tvshowsapp.presentation.prelogin.registration
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.databinding.FragmentRegistrationBinding
@@ -20,15 +21,11 @@ import kotlinx.coroutines.launch
 
 class RegistrationFragment : Fragment(R.layout.fragment_registration) {
 
-    lateinit var viewModel: RegistrationViewModel
+    private val viewModel: RegistrationViewModel by viewModels {
+        activity?.injector?.getRegistrationViewModelFactory() as ViewModelProvider.Factory
+    }
 
     private var _binding: FragmentRegistrationBinding? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, activity?.injector?.getRegistrationViewModelFactory() as ViewModelProvider.Factory)
-            .get(RegistrationViewModel::class.java)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

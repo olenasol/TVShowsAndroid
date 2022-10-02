@@ -4,6 +4,7 @@ package com.kotlin.olena.tvshowsapp.presentation.prelogin.login
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
 import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.databinding.FragmentLoginBinding
@@ -22,18 +23,12 @@ import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
-    lateinit var viewModel: LoginViewModel
+    private val viewModel: LoginViewModel by viewModels {
+        activity?.injector?.getLoginViewModelFactory() as ViewModelProvider.Factory
+    }
 
     private var _binding: FragmentLoginBinding? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = provideViewModel()
-    }
-    private fun provideViewModel(): LoginViewModel {
-        return ViewModelProvider(this, activity?.injector?.getLoginViewModelFactory() as ViewModelProvider.Factory)
-            .get(LoginViewModel::class.java)
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentLoginBinding.bind(view)

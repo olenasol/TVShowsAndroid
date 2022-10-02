@@ -4,6 +4,7 @@ import android.app.Application
 import com.kotlin.olena.tvshowsapp.presentation.main.MainViewModel
 import com.kotlin.olena.tvshowsapp.presentation.prelogin.login.LoginViewModel
 import com.kotlin.olena.tvshowsapp.presentation.prelogin.registration.RegistrationViewModel
+import com.kotlin.olena.tvshowsapp.presentation.show.detail.ShowDetailFragment
 import com.kotlin.olena.tvshowsapp.presentation.show.detail.ShowDetailViewModel
 import com.kotlin.olena.tvshowsapp.presentation.show.list.ShowsViewModel
 import dagger.BindsInstance
@@ -33,7 +34,7 @@ interface ApplicationComponent {
 
     fun getShowsViewModelFactory():ViewModelFactory<ShowsViewModel>
 
-    fun getShowDetailViewModelFactory():ViewModelFactory<ShowDetailViewModel>
-
     fun getMainViewModelFactory(): ViewModelFactory<MainViewModel>
+
+    fun inject(fragment: ShowDetailFragment)
 }

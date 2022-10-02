@@ -5,4 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ShowRepository {
     suspend fun retrieveListOfShows(): Flow<List<Show>>
+
+    fun getShowById(id: Int): Show
 }
