@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotlin.olena.tvshowsapp.domain.models.FieldInputState
 import com.kotlin.olena.tvshowsapp.domain.models.InputField
-import com.kotlin.olena.tvshowsapp.domain.models.FirebaseAuthState
+import com.kotlin.olena.tvshowsapp.domain.models.AuthState
 import com.kotlin.olena.tvshowsapp.domain.usecase.RegisterNewUserUseCase
 import com.kotlin.olena.tvshowsapp.other.InputValidationHelper.getEmailState
 import com.kotlin.olena.tvshowsapp.other.InputValidationHelper.getPasswordState
@@ -25,8 +25,8 @@ class RegistrationViewModel @Inject constructor(
     ))
     val inputFieldsState = _inputFieldsState.asStateFlow()
 
-    private val _registerState = MutableSharedFlow<FirebaseAuthState>()
-    val registerState:Flow<FirebaseAuthState> = _registerState
+    private val _registerState = MutableSharedFlow<AuthState>()
+    val registerState:Flow<AuthState> = _registerState
 
     fun registerUser(email:String?, password:String?, confirmPassword:String?){
         viewModelScope.launch {

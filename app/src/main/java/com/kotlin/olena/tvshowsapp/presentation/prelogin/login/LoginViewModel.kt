@@ -3,7 +3,7 @@ package com.kotlin.olena.tvshowsapp.presentation.prelogin.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotlin.olena.tvshowsapp.domain.models.FieldInputState
-import com.kotlin.olena.tvshowsapp.domain.models.FirebaseAuthState
+import com.kotlin.olena.tvshowsapp.domain.models.AuthState
 import com.kotlin.olena.tvshowsapp.domain.models.InputField
 import com.kotlin.olena.tvshowsapp.domain.usecase.LoginUserUseCase
 import com.kotlin.olena.tvshowsapp.other.InputValidationHelper
@@ -20,8 +20,8 @@ class LoginViewModel @Inject constructor(
     ))
     val inputFieldsState = _inputFieldsState.asStateFlow()
 
-    private val _loginState = MutableSharedFlow<FirebaseAuthState>()
-    val loginState: Flow<FirebaseAuthState> = _loginState
+    private val _loginState = MutableSharedFlow<AuthState>()
+    val loginState: Flow<AuthState> = _loginState
 
     fun loginUser(email:String?, password:String?){
         viewModelScope.launch {

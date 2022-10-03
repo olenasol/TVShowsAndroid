@@ -11,7 +11,7 @@ import com.kotlin.olena.tvshowsapp.databinding.FragmentRegistrationBinding
 import com.kotlin.olena.tvshowsapp.di.injector
 import com.kotlin.olena.tvshowsapp.domain.models.FieldInputState
 import com.kotlin.olena.tvshowsapp.domain.models.InputField
-import com.kotlin.olena.tvshowsapp.domain.models.FirebaseAuthState
+import com.kotlin.olena.tvshowsapp.domain.models.AuthState
 import com.kotlin.olena.tvshowsapp.other.InputValidationHelper.getErrorInputMessage
 import com.kotlin.olena.tvshowsapp.other.showErrorSnackBar
 import com.kotlin.olena.tvshowsapp.other.showSuccessSnackBar
@@ -64,16 +64,16 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
         }
     }
 
-    private fun updateRegisterState(registerState: FirebaseAuthState) {
+    private fun updateRegisterState(registerState: AuthState) {
         when (registerState) {
-            is FirebaseAuthState.Loading -> {
+            is AuthState.Loading -> {
                 _binding?.submitBtn?.visibility = View.GONE
                 _binding?.loader?.visibility = View.VISIBLE
             }
-            is FirebaseAuthState.Success -> {
+            is AuthState.Success -> {
                 showSuccessSnackBar(getString(R.string.success))
             }
-            is FirebaseAuthState.Error -> {
+            is AuthState.Error -> {
                 _binding?.submitBtn?.visibility = View.VISIBLE
                 _binding?.loader?.visibility = View.GONE
                 showErrorSnackBar(registerState.message.orEmpty())

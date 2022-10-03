@@ -69,7 +69,11 @@ dependencies {
     // Dagger
     implementation "com.google.dagger:dagger:$versions.dagger"
     kapt "com.google.dagger:dagger-compiler:$versions.dagger"
-
+    //Test
+    testImplementation "io.mockk:mockk:$versions.test.mockk"
+    testImplementation "junit:junit:$versions.test.junit"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.coroutines"
+    testImplementation "io.kotest:kotest-assertions-core:$versions.test.kotestAssertions"
 }
 
 apply plugin: 'com.google.gms.google-services'

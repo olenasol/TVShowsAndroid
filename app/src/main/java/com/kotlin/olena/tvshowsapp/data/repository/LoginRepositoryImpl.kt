@@ -1,8 +1,7 @@
 package com.kotlin.olena.tvshowsapp.data.repository
 
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.kotlin.olena.tvshowsapp.domain.models.AuthResult
 import com.kotlin.olena.tvshowsapp.domain.repository.LoginRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -14,18 +13,18 @@ import kotlin.coroutines.suspendCoroutine
 
 class LoginRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseAuth): LoginRepository {
 
-    override suspend fun register(email: String, password: String): Task<AuthResult> {
+    override suspend fun register(email: String, password: String): AuthResult {
         return suspendCoroutine { continuation ->
             firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {result ->
-                continuation.resume(result)
+                continuation.resume(if (result.isSuccessful) AuthResult.Success else AuthResult.Error(result.exception?.localizedMessage))
             }
         }
     }
 
-    override suspend fun login(email: String, password: String): Task<AuthResult> {
+    override suspend fun login(email: String, password: String): AuthResult {
         return suspendCoroutine { continuation ->
             firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {result ->
-                continuation.resume(result)
+                continuation.resume(if (result.isSuccessful) AuthResult.Success else AuthResult.Error(result.exception?.localizedMessage))
             }
         }
     }

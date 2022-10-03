@@ -11,10 +11,6 @@ import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
-/**
- * I like to consider that as the Dagger configuration entry point. It unfortunately doesn't look
- * simple (even though it doesn't look that bad either) and it doesn't get much better than that.
- */
 @Singleton
 @Component(modules = [AppModule::class, RepositoryModule::class, UseCaseModule::class, CoroutineModule::class])
 interface ApplicationComponent {
@@ -24,10 +20,7 @@ interface ApplicationComponent {
         @BindsInstance fun application(application: Application): Builder
         fun build(): ApplicationComponent
     }
-    /**
-     * We could've chosen to create an inject() method instead and do field injection in the
-     * Activity, but for this case this seems less verbose to me in the end.
-     */
+
     fun getLoginViewModelFactory(): ViewModelFactory<LoginViewModel>
 
     fun getRegistrationViewModelFactory():ViewModelFactory<RegistrationViewModel>

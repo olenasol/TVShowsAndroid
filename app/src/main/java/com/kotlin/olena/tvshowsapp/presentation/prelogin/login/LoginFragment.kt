@@ -10,7 +10,7 @@ import com.kotlin.olena.tvshowsapp.R
 import com.kotlin.olena.tvshowsapp.databinding.FragmentLoginBinding
 import com.kotlin.olena.tvshowsapp.di.injector
 import com.kotlin.olena.tvshowsapp.domain.models.FieldInputState
-import com.kotlin.olena.tvshowsapp.domain.models.FirebaseAuthState
+import com.kotlin.olena.tvshowsapp.domain.models.AuthState
 import com.kotlin.olena.tvshowsapp.domain.models.InputField
 import com.kotlin.olena.tvshowsapp.other.InputValidationHelper.getErrorInputMessage
 import com.kotlin.olena.tvshowsapp.other.replaceFragment
@@ -68,13 +68,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
     }
 
-    private fun updateLoginState(loginState: FirebaseAuthState) {
+    private fun updateLoginState(loginState: AuthState) {
         when (loginState) {
-            is FirebaseAuthState.Loading -> {
+            is AuthState.Loading -> {
                 _binding?.submitBtn?.visibility = View.GONE
                 _binding?.loader?.visibility = View.VISIBLE
             }
-            is FirebaseAuthState.Error -> {
+            is AuthState.Error -> {
                 _binding?.submitBtn?.visibility = View.VISIBLE
                 _binding?.loader?.visibility = View.GONE
                 showErrorSnackBar(loginState.message.orEmpty())
