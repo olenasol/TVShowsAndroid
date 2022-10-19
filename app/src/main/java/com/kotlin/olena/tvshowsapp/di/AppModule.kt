@@ -4,24 +4,12 @@ import android.app.Application
 import com.google.firebase.auth.FirebaseAuth
 import com.kotlin.olena.tvshowsapp.data.db.AppDatabase
 import com.kotlin.olena.tvshowsapp.data.db.ShowsDao
-import com.kotlin.olena.tvshowsapp.data.networking.ApiInterface
-import com.kotlin.olena.tvshowsapp.other.BASE_URL
 import dagger.Module
 import dagger.Provides
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 class AppModule {
-
-    @Provides
-    @Singleton
-    fun provideApiClient(): ApiInterface = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiInterface::class.java)
 
     @Provides
     @Singleton

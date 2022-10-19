@@ -6,6 +6,7 @@ import com.kotlin.olena.tvshowsapp.domain.models.FieldInputState
 import com.kotlin.olena.tvshowsapp.domain.models.InputField
 import com.kotlin.olena.tvshowsapp.domain.models.AuthState
 import com.kotlin.olena.tvshowsapp.domain.usecase.RegisterNewUserUseCase
+import com.kotlin.olena.tvshowsapp.other.DispatcherProvider
 import com.kotlin.olena.tvshowsapp.other.InputValidationHelper.getEmailState
 import com.kotlin.olena.tvshowsapp.other.InputValidationHelper.getPasswordState
 import com.kotlin.olena.tvshowsapp.other.InputValidationHelper.getConfirmPasswordState
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RegistrationViewModel @Inject constructor(
-    private val registerNewUserUseCase: RegisterNewUserUseCase
+    private val registerNewUserUseCase: RegisterNewUserUseCase,
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
     private val _inputFieldsState = MutableStateFlow(mapOf<InputField, FieldInputState>(
@@ -29,7 +31,7 @@ class RegistrationViewModel @Inject constructor(
     val registerState:Flow<AuthState> = _registerState
 
     fun registerUser(email:String?, password:String?, confirmPassword:String?){
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.io()) {
             val inputStateMap = mapOf(
                 InputField.EMAIL to getEmailState(email),
                 InputField.PASSWORD to getPasswordState(password),
