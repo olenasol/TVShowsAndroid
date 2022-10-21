@@ -1,6 +1,6 @@
 package com.kotlin.olena.tvshowsapp.domain.repository
 
-import com.kotlin.olena.tvshowsapp.domain.models.AuthResult
+import com.kotlin.olena.auth.AuthResult
 import kotlinx.coroutines.flow.Flow
 
 interface LoginRepository {

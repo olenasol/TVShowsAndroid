@@ -41,6 +41,11 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':core:network')
+    implementation project(path: ':core:database')
+    implementation project(path: ':core:auth')
+
+    //Firebase - sign in
+    implementation "com.google.firebase:firebase-auth:$versions.firebase.auth"
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
     implementation "com.google.android.material:material:$versions.material"
@@ -54,19 +59,13 @@ dependencies {
     //Architecture Components
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.androidX.lifecycle"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$versions.androidX.lifecycle"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "androidx.fragment:fragment-ktx:1.5.3"
-    implementation "androidx.room:room-runtime:$versions.androidX.room"
-    kapt "androidx.room:room-compiler:$versions.androidX.room"
-    implementation "androidx.room:room-ktx:$versions.androidX.room"
     //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
     //Glide - for loading images
     implementation "com.github.bumptech.glide:glide:$versions.glide"
     kapt "com.github.bumptech.glide:compiler:$versions.glide"
-    //Firebase - sign in
-    implementation "com.google.firebase:firebase-auth:$versions.firebase.auth"
     //Timber - logging
     implementation "com.jakewharton.timber:timber:$versions.timber"
     // Dagger

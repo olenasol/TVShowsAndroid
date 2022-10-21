@@ -1,2 +1,5 @@
 include ':app'
 include ':core:network'
+include ':core:database'
+include ':core:auth'
+include ':feature:prelogin:presentation'

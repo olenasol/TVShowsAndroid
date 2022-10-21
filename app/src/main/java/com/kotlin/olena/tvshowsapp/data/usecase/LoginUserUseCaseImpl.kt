@@ -1,6 +1,6 @@
 package com.kotlin.olena.tvshowsapp.data.usecase
 
-import com.kotlin.olena.tvshowsapp.domain.models.AuthResult
+import com.kotlin.olena.auth.AuthResult
 import com.kotlin.olena.tvshowsapp.domain.models.AuthState
 import com.kotlin.olena.tvshowsapp.domain.repository.LoginRepository
 import com.kotlin.olena.tvshowsapp.domain.usecase.LoginUserUseCase

@@ -1,6 +1,8 @@
 package com.kotlin.olena.tvshowsapp.di
 
 import android.app.Application
+import com.kotlin.olena.auth.AuthModule
+import com.kotlin.olena.database.DatabaseModule
 import com.kotlin.olena.network.NetworkModule
 import com.kotlin.olena.tvshowsapp.presentation.main.MainViewModel
 import com.kotlin.olena.tvshowsapp.presentation.prelogin.login.LoginViewModel
@@ -12,7 +14,14 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, RepositoryModule::class, UseCaseModule::class, CoroutineModule::class, NetworkModule::class])
+@Component(modules = [
+    RepositoryModule::class,
+    UseCaseModule::class,
+    CoroutineModule::class,
+    NetworkModule::class,
+    DatabaseModule::class,
+    AuthModule::class,
+])
 interface ApplicationComponent {
 
     @Component.Builder

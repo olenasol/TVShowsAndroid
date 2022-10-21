@@ -1,6 +1,6 @@
 package com.kotlin.olena.tvshowsapp.domain.repository
 
-import com.kotlin.olena.tvshowsapp.domain.models.Show
+import com.kotlin.olena.database.Show
 import kotlinx.coroutines.flow.Flow
 
 interface ShowRepository {

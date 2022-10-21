@@ -46,10 +46,4 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.popBackStack()
         }
     }
-
-    fun changeLoadingState(isVisible: Boolean) {
-        layoutProgressBar.visibility =
-                if (isVisible) View.VISIBLE
-                else View.GONE
-    }
 }
